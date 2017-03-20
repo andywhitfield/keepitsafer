@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using KeepItSafer.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KeepItSafer.Controllers
 {
@@ -6,19 +8,10 @@ namespace KeepItSafer.Controllers
     {
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
+            using (var db = new SqliteDataContext())
+            {
+                ViewData["Users"] = string.Join(", ", db.UserAccounts.Select(ua => $"{ua.UserAccountId}:{ua.AuthenticationUri}"));
+            }
 
             return View();
         }
