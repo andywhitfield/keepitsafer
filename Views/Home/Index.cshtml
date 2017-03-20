@@ -20,6 +20,24 @@
                     </a>
                 </p>
                 <p>@ViewData["Users"]</p>
+                <p>
+                    @if (User?.Identity?.IsAuthenticated ?? false) {
+                        <strong>Welcome, @User.Identity.Name</strong>
+
+                        <p>
+                            @foreach (var claim in Context.User.Claims) {
+                                <div>@claim.Type: <b>@claim.Value</b></div>
+                            }
+                        </p>
+                        
+                        <a class="btn btn-lg btn-danger" href="/signout?returnUrl=%2F">Sign out</a>
+                    }
+                    else
+                    {
+                        <strong>Welcome, anonymous</strong>
+                        <a class="btn btn-lg btn-success" href="/signin?returnUrl=%2F">Sign in</a>
+                    }
+                </p>
             </div>
         </div>
         <div class="item">
