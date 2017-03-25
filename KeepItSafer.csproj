@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="AspNet.Security.OpenId" Version="1.0.0-beta3-final" />
+    <PackageReference Include="BCrypt.Net-Core" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
