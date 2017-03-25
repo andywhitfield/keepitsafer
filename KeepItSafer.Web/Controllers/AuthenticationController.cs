@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KeepItSafer.Controllers
+namespace KeepItSafer.Web.Controllers
 {
     public class AuthenticationController : Controller
     {

@@ -1,4 +1,4 @@
-namespace KeepItSafer.Models
+namespace KeepItSafer.Web.Models
 {
     public class UserAccount
     {

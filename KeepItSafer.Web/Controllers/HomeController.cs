@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using KeepItSafer.Data;
+using KeepItSafer.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 
-namespace KeepItSafer.Controllers
+namespace KeepItSafer.Web.Controllers
 {
     public class HomeController : Controller
     {

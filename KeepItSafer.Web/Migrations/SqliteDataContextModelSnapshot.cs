@@ -1,17 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using KeepItSafer.Data;
+using KeepItSafer.Web.Data;
 
-namespace KeepItSafer.Migrations
+namespace KeepItSafer.Web.Migrations
 {
     [DbContext(typeof(SqliteDataContext))]
-    [Migration("20170320101642_InitialMigration")]
-    partial class InitialMigration
+    partial class SqliteDataContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");

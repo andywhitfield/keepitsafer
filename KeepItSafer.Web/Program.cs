@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace KeepItSafer
+namespace KeepItSafer.Web
 {
     public class Program
     {

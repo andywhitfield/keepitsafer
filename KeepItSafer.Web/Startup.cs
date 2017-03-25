@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
-namespace KeepItSafer
+namespace KeepItSafer.Web
 {
     public class Startup
     {

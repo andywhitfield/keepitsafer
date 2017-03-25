@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace KeepItSafer.Migrations
+namespace KeepItSafer.Web.Migrations
 {
     public partial class InitialMigration : Migration
     {
