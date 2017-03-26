@@ -8,9 +8,10 @@ using KeepItSafer.Web.Data;
 namespace KeepItSafer.Web.Migrations
 {
     [DbContext(typeof(SqliteDataContext))]
-    partial class SqliteDataContextModelSnapshot : ModelSnapshot
+    [Migration("20170326183624_AddPasswordDatabaseToUserAccount")]
+    partial class AddPasswordDatabaseToUserAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
