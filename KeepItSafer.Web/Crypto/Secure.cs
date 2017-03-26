@@ -67,6 +67,16 @@ namespace KeepItSafer.Web.Crypto
             }
         }
 
+        public string HashValue(string value)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(value);
+        }
+
+        public bool ValidateHash(string value, string hash)
+        {
+            return BCrypt.Net.BCrypt.Verify(value, hash);
+        }
+
         private byte[] GenerateRandomSalt()
         {
             var salt = new byte[algorithm.KeySize];
