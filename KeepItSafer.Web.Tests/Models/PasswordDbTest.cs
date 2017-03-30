@@ -1,4 +1,5 @@
 using System.Linq;
+using KeepItSafer.Crypto;
 using KeepItSafer.Web.Models;
 using Xunit;
 

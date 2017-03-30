@@ -12,6 +12,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KeepItSafer.Crypto\KeepItSafer.Crypto.csproj" />
-    <ProjectReference Include="..\KeepItSafer.Web\KeepItSafer.Web.csproj" />
   </ItemGroup>
 </Project>

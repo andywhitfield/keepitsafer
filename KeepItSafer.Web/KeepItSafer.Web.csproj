@@ -20,4 +20,8 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KeepItSafer.Crypto\KeepItSafer.Crypto.csproj" />
+  </ItemGroup>
 </Project>

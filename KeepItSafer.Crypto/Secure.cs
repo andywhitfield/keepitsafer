@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace KeepItSafer.Web.Crypto
+namespace KeepItSafer.Crypto
 {
     public class Secure : IDisposable
     {

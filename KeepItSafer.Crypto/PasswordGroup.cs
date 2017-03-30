@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace KeepItSafer.Web.Models
+namespace KeepItSafer.Crypto
 {
     public class PasswordGroup
     {

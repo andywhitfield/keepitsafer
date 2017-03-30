@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using KeepItSafer.Crypto;
 
 namespace KeepItSafer.Web.Models
 {

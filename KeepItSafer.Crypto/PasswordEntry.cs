@@ -1,4 +1,4 @@
-namespace KeepItSafer.Web.Models
+namespace KeepItSafer.Crypto
 {
     public class PasswordEntry
     {

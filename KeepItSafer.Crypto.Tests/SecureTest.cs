@@ -1,7 +1,7 @@
-using KeepItSafer.Web.Crypto;
+using KeepItSafer.Crypto;
 using Xunit;
 
-namespace KeepItSafer.Web.Tests.Crypto
+namespace KeepItSafer.Crypto.Tests
 {
     public class SecureTest
     {
