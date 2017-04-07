@@ -36,6 +36,12 @@ namespace KeepItSafer.Web
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             });
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Cookies.ApplicationCookie.LoginPath = new PathString("/signin");
+                options.Cookies.ApplicationCookie.LogoutPath = new PathString("/signout");
+                options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
+            });
             
             // Add framework services.
             services.AddMvc();

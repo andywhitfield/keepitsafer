@@ -6,7 +6,7 @@
     <p>@ViewData["Users"]</p>
     <p>
         @if (User?.Identity?.IsAuthenticated ?? false) {
-            <strong>Welcome, @(User.Identity.Name ?? User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value ?? "")</strong>
+            <strong>Welcome, @ViewData["UserName"]</strong>
 
             <p>
                 @foreach (var claim in Context.User.Claims) {

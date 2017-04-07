@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using KeepItSafer.Web.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 
@@ -18,8 +19,12 @@ namespace KeepItSafer.Web.Controllers
             this.fileProvider = fileProvider;
         }
         
+        [Authorize]
         public IActionResult Index()
         {
+            var authId = User?.Claims?.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            ViewData["UserName"] = authId;
+
             using (var db = new SqliteDataContext())
             {
                 ViewData["Users"] = string.Join(", ", db.UserAccounts.Select(ua => $"{ua.UserAccountId}:{ua.AuthenticationUri}"));

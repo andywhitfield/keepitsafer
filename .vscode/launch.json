@@ -16,10 +16,9 @@
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceRoot}/bin/Debug/netcoreapp1.1/KeepItSafer.dll",
+            "program": "${workspaceRoot}/KeepItSafer.Web/bin/Debug/netcoreapp1.1/KeepItSafer.Web.dll",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/KeepItSafer.Web",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true,
@@ -39,7 +38,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/Views"
+                "/Views": "${workspaceRoot}/KeepItSafer.Web/Views"
             }
         },
         {
