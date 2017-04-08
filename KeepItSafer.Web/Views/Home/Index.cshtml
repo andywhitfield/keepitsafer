@@ -1,28 +1,41 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<section id="PasswordGroups">
+<section id="group-1" class="group-section">
+    <div>Group 1</div>
+    <article>
+        <ul class="password-list">
+            <li id="group-1-item-1">Item 1<span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
+            <li id="group-1-item-2">A second item, #2<span class="password-value"><input type="text" value="Some plaintext value" readonly="readonly" data-type="decrypted" data-decrypted="true"/> <button>Delete</button></span></li>
+            <li id="group-1-item-3">Lastly, number 3<span class="password-value"><input type="text" value="The decrypted value" readonly="readonly" data-type="encrypted" data-decrypted="true"/> <button>Delete</button></span></li>
+        </ul>
+    </article>
+</section>
 
-<div class="row">
-    <p>@ViewData["Users"]</p>
-    <p>
-        @if (User?.Identity?.IsAuthenticated ?? false) {
-            <strong>Welcome, @ViewData["UserName"]</strong>
+<section id="group-2" class="group-section">
+    <div>Group 2</div>
+    <article>
+        <ul class="password-list">
+            <li id="group-2-item-1">One encrypted<span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
+            <li id="group-2-item-2">And another encrypted value! And another encrypted value!<span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
+        </ul>
+    </article>
+</section>
+</section>
 
-            <p>
-                @foreach (var claim in Context.User.Claims) {
-                    <div>@claim.Type: <b>@claim.Value</b></div>
-                }
-            </p>
-            
-            <a class="btn btn-lg btn-danger" href="/signout?returnUrl=%2F">Sign out</a>
-        }
-        else
-        {
-            <strong>Welcome, anonymous</strong>
-            <a class="btn btn-lg btn-success" href="/signin?returnUrl=%2F">Sign in</a>
-        }
-    </p>
-    <p>@ViewData["dicts"]</p>
-    <p>@ViewData["hashed"]</p>
-    <p>@ViewData["decrypt"]</p>
-</div>
+<p>
+    Notes:
+    <ul>
+        <li>Add JS to hide/show the values (article tag) under each group. Should be al collapsed by default.</li>
+        <li>Clicking the textbox should prompt to decrypt / or decrypt if master password is still good.</li>
+        <li>Clicking the row should hide the password again if it's been decrypted.</li>
+        <li>Implement delete</li>
+        <li>Implement add</li>
+        <li>Implement web api to build the page dynamically, based on password db.</li>
+    </ul>
+</p>
+
+<p>
+TODO: Area to add new password.
+<br/>
+Note, should consolidate the password generator from the old homepage
+and the 'add new password' section into one.
+</p>

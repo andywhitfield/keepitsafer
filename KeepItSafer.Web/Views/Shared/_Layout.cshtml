@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - KeepItSafer</title>
+    <title>KeepItSafer</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -13,16 +13,24 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-       <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+    <nav>
+       <a asp-area="" asp-controller="Home" asp-action="Index"><img src="@Url.Content("~/images/keepitsafer.png")" width="32" height="32" alt="KeepItSafer" /><h1>KeepItSafer</h1></a>
+        <span class="actions">
+        @if (User != null && User.Identity.IsAuthenticated) {
+            <text>
+            <a href="@Url.Content("~/signout")">Logout</a>
+            </text>
+        } else {
+            <a href="@Url.Content("~/signin")">Login</a>
+        }
+        </span>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - KeepItSafer</p>
-        </footer>
-    </div>
+    
+    @RenderBody()
+       
+    <footer>
+        <p>&copy; @DateTime.UtcNow.Year ~ KeepItSafer</p>
+    </footer>
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

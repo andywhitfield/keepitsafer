@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -46,6 +47,7 @@ namespace KeepItSafer.Web
             // Add framework services.
             services.AddMvc();
             services.AddSingleton<IFileProvider>(hostingEnvironment.ContentRootFileProvider);
+            services.AddSingleton<ICompilationService, KeepItSaferCompilationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

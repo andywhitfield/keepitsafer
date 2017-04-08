@@ -1,37 +1,16 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
+﻿body, li, div, span, a, td, button { font-family: sans-serif; font-size: 11pt; }
+a, a:active, a:link, a:visited, a:hover { color: #000000; }
+a:hover { text-decoration: none; }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
+nav h1 { float: left; font-size: 14pt; padding: 5px 5px 0 0; margin: 0; }
+nav span.actions { float: right; }
+nav { clear: both; margin: 5px 5px 5px 0px }
 
-/* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
+.group-section div { font-size: 13pt; margin-bottom: 3px; padding: 2px; background-color: #408732; color: #ffffff; font-weight: bold; cursor: default; }
+ul.password-list { list-style-type: none; padding: 0 0 0 0; margin: 5px 0 20px 0; }
+.password-list li { clear: right; min-height: 25px; margin: 3px; padding: 0px 2px 2px 2px; color: #555555; background-color: #dee8d9; cursor: default; }
+.password-list li:hover { color: #000000; }
+.password-list > li > span.password-value { white-space: nowrap; text-align: right; float: right; }
+input[type="text"][data-type="encrypted"][data-decrypted="false"] { color: #aaaaaa; }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
-}
+footer { padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
