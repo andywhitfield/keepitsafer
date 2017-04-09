@@ -24,7 +24,6 @@
 <p>
     Notes:
     <ul>
-        <li>Add JS to hide/show the values (article tag) under each group. Should be al collapsed by default.</li>
         <li>Clicking the textbox should prompt to decrypt / or decrypt if master password is still good.</li>
         <li>Clicking the row should hide the password again if it's been decrypted.</li>
         <li>Implement delete</li>
@@ -39,3 +38,9 @@ TODO: Area to add new password.
 Note, should consolidate the password generator from the old homepage
 and the 'add new password' section into one.
 </p>
+
+@section Scripts {
+    <script type="text/javascript">
+    $(function() { initialisePasswordGroups(); });
+    </script>
+}
