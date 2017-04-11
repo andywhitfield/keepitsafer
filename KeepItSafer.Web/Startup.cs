@@ -46,6 +46,7 @@ namespace KeepItSafer.Web
             
             // Add framework services.
             services.AddMvc();
+            services.AddCors();
             services.AddSingleton<IFileProvider>(hostingEnvironment.ContentRootFileProvider);
             services.AddSingleton<ICompilationService, KeepItSaferCompilationService>();
         }
