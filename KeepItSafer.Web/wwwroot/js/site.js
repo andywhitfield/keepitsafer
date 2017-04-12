@@ -49,6 +49,7 @@ function decryptPassword() {
         console.log('received decrypt: ' + data.decrypted + ':' + data.decryptedValue);
         passwordTextbox.val(data.decryptedValue);
         passwordTextbox.attr('data-decrypted', 'true');
+        passwordTextbox.select();
      })
      .fail(function() {
          console.log('decrypt failed');

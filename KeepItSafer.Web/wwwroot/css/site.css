@@ -8,9 +8,10 @@ nav { clear: both; margin: 5px 5px 5px 0px }
 
 .group-section div { font-size: 13pt; margin-bottom: 3px; padding: 2px; background-color: #408732; color: #ffffff; font-weight: bold; cursor: default; }
 ul.password-list { list-style-type: none; padding: 0 0 0 0; margin: 5px 0 20px 0; }
-.password-list li { clear: right; min-height: 25px; margin: 3px; padding: 0px 2px 2px 2px; color: #555555; background-color: #dee8d9; cursor: default; }
+.password-list li { display: flex; flex-direction: row; position: relative; margin: 3px; padding: 0px 2px 2px 2px; color: #555555; background-color: #dee8d9; cursor: default; }
 .password-list li:hover { color: #000000; }
-.password-list > li > span.password-value { white-space: nowrap; text-align: right; float: right; }
+.password-list > li > span.password-name { flex-grow: 1; display: block; overflow: hidden; padding: 4px 0px 4px 2px; }
+.password-list > li > span.password-value { display: block; white-space: nowrap; }
 input[type="text"][data-type="encrypted"][data-decrypted="false"] { color: #aaaaaa; }
 
 footer { padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }

@@ -5,7 +5,7 @@
     <h1>Authentication</h1>
     <p class="lead text-left">Sign in using one of these external providers:</p>
     
-    <form action="/signin" method="post">
+    <form action="@Url.Content("~/signin")" method="post">
         <input type="hidden" name="Provider" value="@Model.AuthenticationScheme" />
         <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
 
