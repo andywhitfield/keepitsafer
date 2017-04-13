@@ -25,12 +25,14 @@
     Notes:
     <ul>
         <li>Clicking the textbox should prompt to decrypt / or decrypt if master password is still good.</li>
-        <li>Clicking the row should hide the password again if it's been decrypted.</li>
         <li>Implement delete</li>
-        <li>Implement add</li>
-        <li>Implement web api to build the page dynamically, based on password db.</li>
+        <li>Implement add / update</li>
+        <li>Build the page dynamically, based on password db.</li>
+        <li>Clean up login page</li>
         <li>Save / backup to Dropbox preferrably, but perhaps initially just allow download.</li>
         <li>Use the JS local storage library to save expanded group state.</li>
+        <li>Checkout how to deploy to iis.</li>
+        <li>Need new ssl cert.</li>
     </ul>
 </p>
 
@@ -40,6 +42,23 @@ TODO: Area to add new password.
 Note, should consolidate the password generator from the old homepage
 and the 'add new password' section into one.
 </p>
+
+<div id="modal-background"></div>
+<div id="modal-content">
+    <div><button id="modal-close">Close</button></div>
+    <div class="modal-content-value" id="modal-content-master-password-prompt">
+        <form id="masterpasswordentry">
+        <label for="master-password">Master Password:</label>
+        <input type="password" name="masterpassword" />
+        <div>
+        <input type="submit" value="OK" />
+        <input type="button" value="Cancel" />
+        <input type="hidden" name="group" />
+        <input type="hidden" name="entry" />
+        </div>
+        </form>
+    </div>
+</div>
 
 @section Scripts {
 <script type="text/javascript">
