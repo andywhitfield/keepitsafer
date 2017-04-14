@@ -21,26 +21,85 @@
 </section>
 </section>
 
-<p>
+<section id="AddNewEntry">
+    <form id="addnewentryform">
+
+    <fieldset>
+    <legend>Add New / Update Entry</legend>
+    <div>
+        <label for="addnewentrygroup">Group:</label>
+        <input type="text" id="addnewentrygroup" name="addnewentrygroup" />
+    </div>
+    
+    <div>
+        <label for="addnewentryname">Name:</label>
+        <input type="text" id="addnewentryname" name="addnewentryname" />
+    </div>
+    
+    <div>
+        <label for="addnewentryvalueencrypted">Value Encrypted:</label>
+        <input type="checkbox" id="addnewentryvalueencrypted" name="addnewentryvalueencrypted" value="true" />
+    </div>
+    
+    <div>
+        <label for="addnewentryvalue">Value:</label>
+        <input type="text" id="addnewentryvalue" name="addnewentryvalue" />
+    </div>
+
+    <div>
+        <input type="submit" value="Add" />
+    </div>
+    </fieldset>
+
+    </form>
+</section>
+
+<section id="PasswordGenerator">
+    <form id="passwordgeneratorform">
+
+    <fieldset>
+    <legend>Generate a Password</legend>
+    <div>
+        <label for="genpassminpasswordlength">Min password length:</label>
+        <input type="number" min="4" step="1" id="genpassminpasswordlength" name="genpassminpasswordlength" value="8" />
+    </div>
+    
+    <div>
+        <label for="genpassmaxpasswordlength">Max password length:</label>
+        <input type="number" min="0" step="1" id="genpassmaxpasswordlength" name="genpassmaxpasswordlength" value="0" />
+    </div>
+
+    <div>
+        <label for="genpassspecialchars">Allow special characters:</label>
+        <input type="checkbox" id="genpassspecialchars" name="genpassspecialchars" value="true" checked="checked" />
+    </div>
+        
+    <div>
+        <label for="genpassnumbers">Allow numbers:</label>
+        <input type="checkbox" id="genpassnumbers" name="genpassnumbers" value="true" checked="checked" />
+    </div>
+        
+    <div>
+        <input type="submit" value="Generate" />
+    </div>
+    </fieldset>
+
+    </form>
+</section>
+
+<p style="clear:both;">
     Notes:
     <ul>
-        <li>Implement client add / update</li>
         <li>Implement the password db; implement the controller actions to load/update/etc.</li>
         <li>Save master password for the length of the session (which we should set to a low value, e.g. 5 or 10 mins)</li>
         <li>Clean up login page</li>
         <li>After logging in (or if skipped) and the master password hasn't been set, go to a page to enter a new master password...which on success will create a valid masterdb password entry in the database.</li>
+        <li>Implement dictionary stuff to generate new passwords</li>
         <li>Save / backup to Dropbox preferrably, but perhaps initially just allow download.</li>
         <li>Use the JS local storage library to save expanded group state.</li>
         <li>Checkout how to deploy to IIS.</li>
         <li>Need new ssl cert.</li>
     </ul>
-</p>
-
-<p>
-TODO: Area to add new password.
-<br/>
-Note, should consolidate the password generator from the old homepage
-and the 'add new password' section into one.
 </p>
 
 <div id="modal-background"></div>
@@ -67,6 +126,8 @@ and the 'add new password' section into one.
     <input type="hidden" name="action" />
     <input type="hidden" name="group" />
     <input type="hidden" name="entry" />
+    <input type="hidden" name="value" />
+    <input type="hidden" name="valueEncrypted" />
     </div>
     </form>
 </div>

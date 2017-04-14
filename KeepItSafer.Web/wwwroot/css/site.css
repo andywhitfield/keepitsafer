@@ -16,7 +16,18 @@ ul.password-list { list-style-type: none; padding: 0 0 0 0; margin: 5px 0 20px 0
 .password-list > li > span.password-value { display: block; white-space: nowrap; }
 input[type="text"][data-type="encrypted"][data-decrypted="false"] { color: #aaaaaa; }
 
-footer { padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
+#addnewentryform { margin: 20px 20px 0px 0px; float: left; }
+#addnewentryform legend { color: #408732; }
+#addnewentryform label { width: 115px; display: inline-block; }
+#addnewentryform input[type="submit"] { margin-left: 120px; }
+
+#passwordgeneratorform { margin-top: 20px; float: left; }
+#passwordgeneratorform legend { color: #408732; }
+#passwordgeneratorform label { width: 185px; display: inline-block; }
+#passwordgeneratorform input[type="number"] { width: 40px; }
+#passwordgeneratorform input[type="submit"] { margin-left: 190px; }
+
+footer { clear: both; padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
 
 /* modal window styles */
 #modal-background {
@@ -49,7 +60,7 @@ footer { padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
     padding: 10px;
     position: absolute;
     top: 50%;
-    width: 340px;
+    max-width: 340px;
     z-index: 1000;
 }
 

@@ -1,4 +1,3 @@
-using KeepItSafer.Crypto;
 using Xunit;
 
 namespace KeepItSafer.Crypto.Tests
