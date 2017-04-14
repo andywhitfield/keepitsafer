@@ -2,6 +2,8 @@
 a, a:active, a:link, a:visited, a:hover { color: #000000; }
 a:hover { text-decoration: none; }
 
+fieldset { clear: both; margin-bottom: 5px; border: 1px solid #408732; padding: 8px; border-radius: 4px; }
+
 nav h1 { float: left; font-size: 14pt; padding: 5px 5px 0 0; margin: 0; }
 nav span.actions { float: right; }
 nav { clear: both; margin: 5px 5px 5px 0px }
@@ -47,7 +49,7 @@ footer { padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
     padding: 10px;
     position: absolute;
     top: 50%;
-    width: 320px;
+    width: 340px;
     z-index: 1000;
 }
 
@@ -56,4 +58,6 @@ footer { padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
 }
 
 #modal-close { float: right; margin-bottom: 10px; }
-.modal-content-value { clear: both; }
+.modal-content-header { padding-bottom: 10px; display: none; font-size: 13pt; }
+.modal-content-header[data-level="warn"] { font-weight: bold; }
+.modal-content-header[data-level="error"] { font-weight: bold; color: red; }

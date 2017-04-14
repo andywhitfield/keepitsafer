@@ -1,21 +1,21 @@
 ﻿<section id="PasswordGroups">
-<section id="group-1" class="group-section">
+<section data-id="group-1" class="group-section">
     <div>Group 1</div>
     <article>
         <ul class="password-list">
-            <li id="group-1-item-1"><span class="password-name">Item 1</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
-            <li id="group-1-item-2"><span class="password-name">A second item, #2</span><span class="password-value"><input type="text" value="Some plaintext value" readonly="readonly" data-type="decrypted" data-decrypted="true"/> <button>Delete</button></span></li>
-            <li id="group-1-item-3"><span class="password-name">Lastly, number 3</span><span class="password-value"><input type="text" value="The decrypted value" readonly="readonly" data-type="encrypted" data-decrypted="true"/> <button>Delete</button></span></li>
+            <li data-id="group-1-item-1"><span class="password-name">Item 1</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
+            <li data-id="group-1-item-2"><span class="password-name">A second item, #2</span><span class="password-value"><input type="text" value="Some plaintext value" readonly="readonly" data-type="decrypted" data-decrypted="true"/> <button>Delete</button></span></li>
+            <li data-id="group-1-item-3"><span class="password-name">Lastly, number 3</span><span class="password-value"><input type="text" value="The decrypted value" readonly="readonly" data-type="encrypted" data-decrypted="true"/> <button>Delete</button></span></li>
         </ul>
     </article>
 </section>
 
-<section id="group-2" class="group-section">
+<section data-id="group-2" class="group-section">
     <div>Group 2</div>
     <article>
         <ul class="password-list">
-            <li id="group-2-item-1"><span class="password-name">One encrypted</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
-            <li id="group-2-item-2"><span class="password-name">And another encrypted value! And another encrypted value!</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
+            <li data-id="group-2-item-1"><span class="password-name">One encrypted</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
+            <li data-id="group-2-item-2"><span class="password-name">And another encrypted value! And another encrypted value!</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <button>Delete</button></span></li>
         </ul>
     </article>
 </section>
@@ -24,10 +24,10 @@
 <p>
     Notes:
     <ul>
-        <li>Clicking the textbox should prompt to decrypt / or decrypt if master password is still good.</li>
         <li>Implement delete</li>
         <li>Implement add / update</li>
         <li>Build the page dynamically, based on password db.</li>
+        <li>Save master password for the length of the session (which we should set to a low value, e.g. 5 or 10 mins)</li>
         <li>Clean up login page</li>
         <li>Save / backup to Dropbox preferrably, but perhaps initially just allow download.</li>
         <li>Use the JS local storage library to save expanded group state.</li>
@@ -46,18 +46,28 @@ and the 'add new password' section into one.
 <div id="modal-background"></div>
 <div id="modal-content">
     <div><button id="modal-close">Close</button></div>
-    <div class="modal-content-value" id="modal-content-master-password-prompt">
-        <form id="masterpasswordentry">
-        <label for="master-password">Master Password:</label>
-        <input type="password" name="masterpassword" />
-        <div>
-        <input type="submit" value="OK" />
-        <input type="button" value="Cancel" />
-        <input type="hidden" name="group" />
-        <input type="hidden" name="entry" />
-        </div>
-        </form>
+    <form id="masterpasswordentryform">
+    <div class="modal-content-header"></div>
+
+    <fieldset>
+    <div>
+        <label for="masterpassword">Master Password:</label>
+        <input type="password" id="masterpassword" name="masterpassword" />
     </div>
+    
+    <div>
+        <label for="remembermasterpassword">Remember for the session:</label>
+        <input type="checkbox" id="remembermasterpassword" name="remembermasterpassword" value="true" />
+    </div>
+    </fieldset>
+
+    <div>
+    <input type="submit" value="OK" />
+    <input type="button" value="Cancel" />
+    <input type="hidden" name="group" />
+    <input type="hidden" name="entry" />
+    </div>
+    </form>
 </div>
 
 @section Scripts {

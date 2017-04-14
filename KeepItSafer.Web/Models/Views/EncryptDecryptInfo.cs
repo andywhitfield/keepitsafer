@@ -1,6 +1,6 @@
 namespace KeepItSafer.Web.Models.Views
 {
-    public class DecryptItem
+    public class EncryptDecryptInfo
     {
         public string Group { get; set; }
         public string Entry { get; set; }
