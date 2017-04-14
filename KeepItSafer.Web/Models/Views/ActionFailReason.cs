@@ -1,8 +1,8 @@
 namespace KeepItSafer.Web.Models.Views
 {
-    public enum DecryptFailReason
+    public enum ActionFailReason
     {
         NeedMasterPassword,
-        FailedToDecrypt
+        MasterPasswordInvalid
     }
 }

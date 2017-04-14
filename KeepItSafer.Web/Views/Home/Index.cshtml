@@ -24,14 +24,14 @@
 <p>
     Notes:
     <ul>
-        <li>Implement delete</li>
-        <li>Implement add / update</li>
-        <li>Build the page dynamically, based on password db.</li>
+        <li>Implement client add / update</li>
+        <li>Implement the password db; implement the controller actions to load/update/etc.</li>
         <li>Save master password for the length of the session (which we should set to a low value, e.g. 5 or 10 mins)</li>
         <li>Clean up login page</li>
+        <li>After logging in (or if skipped) and the master password hasn't been set, go to a page to enter a new master password...which on success will create a valid masterdb password entry in the database.</li>
         <li>Save / backup to Dropbox preferrably, but perhaps initially just allow download.</li>
         <li>Use the JS local storage library to save expanded group state.</li>
-        <li>Checkout how to deploy to iis.</li>
+        <li>Checkout how to deploy to IIS.</li>
         <li>Need new ssl cert.</li>
     </ul>
 </p>
@@ -64,6 +64,7 @@ and the 'add new password' section into one.
     <div>
     <input type="submit" value="OK" />
     <input type="button" value="Cancel" />
+    <input type="hidden" name="action" />
     <input type="hidden" name="group" />
     <input type="hidden" name="entry" />
     </div>

@@ -1,21 +1,30 @@
 using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace KeepItSafer.Web.Controllers.Api
 {
     [Route("api/[controller]")]
     public class DecryptController : Controller
     {
+        private readonly ILogger logger;
+
+        public DecryptController(ILogger<DecryptController> logger)
+        {
+            this.logger = logger;
+        }
+
         [HttpPost]
         public IActionResult Decrypt([FromForm] EncryptDecryptInfo info)
         {
+            logger.LogDebug("Received decrypt info: {0}", info);
             if (info.Group == "group-2" && info.Entry == "group-2-item-1")
             {
                 if (string.IsNullOrWhiteSpace(info.MasterPassword))
                 {
                     return new ObjectResult(new {
                         Decrypted = false,
-                        Reason = DecryptFailReason.NeedMasterPassword,
+                        Reason = ActionFailReason.NeedMasterPassword,
                         Group = info.Group,
                         Entry = info.Entry
                     });
@@ -24,7 +33,7 @@ namespace KeepItSafer.Web.Controllers.Api
                 {
                     return new ObjectResult(new {
                         Decrypted = false,
-                        Reason = DecryptFailReason.FailedToDecrypt,
+                        Reason = ActionFailReason.MasterPasswordInvalid,
                         Group = info.Group,
                         Entry = info.Entry
                     });
