@@ -67,8 +67,13 @@ function decryptPassword() {
 
     decrypt(groupEntryId, passwordEntryId);
 }
-function decrypt(groupEntryId, passwordEntryId, masterPassword) {
-    $.post('/api/decrypt', { group: groupEntryId, entry: passwordEntryId, masterPassword: masterPassword || '' })
+function decrypt(groupEntryId, passwordEntryId, masterPassword, rememberMasterPassword) {
+    $.post('/api/decrypt', {
+        group: groupEntryId,
+        entry: passwordEntryId,
+        masterPassword: masterPassword || '',
+        rememberMasterPassword: rememberMasterPassword || 'false'
+    })
      .done(function(data) {
         console.log('received decrypt: ' + data.decrypted + ':' + data.decryptedValue + ':' + data.reason);
         if (data.decrypted) {
@@ -106,11 +111,12 @@ function decryptPasswordUsingMasterPassword(event) {
     var groupEntryId = $('input[name=group]', frm).val();
     var passwordEntryId = $('input[name=entry]', frm).val();
     var masterPasswordField = $('input[name=masterpassword]', frm);
+    var rememberMasterPassword = $('input:checked[name=remembermasterpassword]', frm).val();
     var masterPassword = masterPasswordField.val();
     masterPasswordField.val('');
 
-    console.log('submit decrypt request with form details: group=' + groupEntryId + ';entry=' + passwordEntryId + ';masterpw=' + masterPassword);
-    decrypt(groupEntryId, passwordEntryId, masterPassword);
+    console.log('submit decrypt request with form details: group=' + groupEntryId + ';entry=' + passwordEntryId + ';masterpw=' + masterPassword+';rememberMasterPassword='+rememberMasterPassword);
+    decrypt(groupEntryId, passwordEntryId, masterPassword, rememberMasterPassword);
     closeModalDialog();
 
     event.preventDefault();
