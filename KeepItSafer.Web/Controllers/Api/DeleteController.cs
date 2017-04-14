@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace KeepItSafer.Web.Controllers.Api
 {
     [Route("api/[controller]")]
-    public class DeleteController
+    public class DeleteController : Controller
     {
         private readonly ILogger logger;
 

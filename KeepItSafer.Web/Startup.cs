@@ -47,6 +47,12 @@ namespace KeepItSafer.Web
             // Add framework services.
             services.AddMvc();
             services.AddCors();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+                options.CookieHttpOnly = true;
+            });
             services.AddSingleton<IFileProvider>(hostingEnvironment.ContentRootFileProvider);
             services.AddSingleton<ICompilationService, KeepItSaferCompilationService>();
         }
@@ -87,6 +93,7 @@ namespace KeepItSafer.Web
             });
 
             app.UseMvcWithDefaultRoute();
+            app.UseSession();
         }
     }
 }
