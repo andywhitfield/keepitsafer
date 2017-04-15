@@ -18,6 +18,16 @@ namespace KeepItSafer.Web.Controllers.Api
         public IActionResult Decrypt([FromForm] EncryptDecryptInfo info)
         {
             logger.LogDebug("Received decrypt info: {0}", info);
+            if (!ModelState.IsValid)
+            {
+                return new ObjectResult(new {
+                    Decrypted = false,
+                    Reason = ActionFailReason.InvalidInput,
+                    Group = info.Group,
+                    Entry = info.Entry
+                });
+            }
+
             if (info.Group == "group-2" && info.Entry == "group-2-item-1")
             {
                 if (string.IsNullOrWhiteSpace(info.MasterPassword))

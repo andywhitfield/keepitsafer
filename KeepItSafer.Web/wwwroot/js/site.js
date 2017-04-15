@@ -7,7 +7,7 @@ function initialisePasswordGroups() {
     $('.group-section div', groups.groupsSection).click(toggleShowHideGroupItems);
     $('.password-list input[type="text"]').click(decryptPassword);
     $('.password-list li').click(hideDecryptedPassword);
-    $('.password-list button').click(deleteEntry);
+    $('.password-list input[type="button"]').click(deleteEntry);
 
     $("#modal-background, #modal-close, #modal-content input[value='Cancel']").click(function () { closeModalDialog(); });
     $(document).keydown(function(e) {

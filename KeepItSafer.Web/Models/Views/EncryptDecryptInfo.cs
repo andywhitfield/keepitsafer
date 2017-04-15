@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace KeepItSafer.Web.Models.Views
 {
     public class EncryptDecryptInfo
     {
+        [Required]
         public string Group { get; set; }
+        [Required]
         public string Entry { get; set; }
         public string Value { get; set; }
         public bool ValueEncrypted { get; set; }
