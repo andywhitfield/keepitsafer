@@ -203,7 +203,7 @@ function callDeleteEntry(groupEntryId, passwordEntryId, masterPassword, remember
 }
 function allowAddNewEntry() {
     var allHaveValues = true;
-    $('#addnewentryform input[type="text"]').each(function(i) {
+    $('#addnewentryform input[type="text"], #addnewentryform input[type="password"]').each(function(i) {
         allHaveValues = allHaveValues && $(this).val() != '';
     });
     return allHaveValues;
