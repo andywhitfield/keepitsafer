@@ -1,5 +1,7 @@
 using System.Linq;
+using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +26,20 @@ namespace KeepItSafer.Web.Controllers
             // provider to redirect the user agent to its own authorization endpoint.
             // Note: the authenticationScheme parameter must match the value configured in Startup.cs
             return Challenge(new AuthenticationProperties { RedirectUri = "/" }, provider);
+        }
+
+        [HttpGet("~/newuser")]
+        [Authorize]
+        public IActionResult CreateMasterPassword() => View("CreateMasterPassword");
+
+        [HttpPost("~/newuser")]
+        public IActionResult CreateMasterPassword([FromForm] NewMasterPasswordInfo newDetails)
+        {
+            if (!ModelState.IsValid)
+            {
+                return CreateMasterPassword();
+            }
+            return new RedirectResult("~/");
         }
 
         [HttpGet("~/signout"), HttpPost("~/signout")]

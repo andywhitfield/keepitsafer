@@ -1,14 +1,14 @@
 @using Microsoft.AspNetCore.Http.Authentication
 @model AuthenticationDescription
 
-<div class="jumbotron">
-    <h1>Authentication</h1>
-    <p class="lead text-left">Sign in using one of these external providers:</p>
-    
-    <form action="@Url.Content("~/signin")" method="post">
-        <input type="hidden" name="Provider" value="@Model.AuthenticationScheme" />
-        <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+<h1>Login</h1>
 
-        <button class="btn btn-lg btn-success" type="submit">Connect using @Model.DisplayName</button>
-    </form>
-</div>
+<form action="@Url.Content("~/signin")" method="post">
+    <input type="hidden" name="Provider" value="@Model.AuthenticationScheme" />
+    <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+
+    <p>
+        Sign in using SmallId:
+        <input type="submit" value="Login"/>
+    </p>
+</form>
