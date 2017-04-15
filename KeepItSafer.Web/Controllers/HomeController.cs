@@ -13,16 +13,18 @@ namespace KeepItSafer.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IFileProvider fileProvider;
+        private readonly IUserAccountRepository userAccountRepository;
 
-        public HomeController(IFileProvider fileProvider)
+        public HomeController(IFileProvider fileProvider, IUserAccountRepository userAccountRepository)
         {
             this.fileProvider = fileProvider;
+            this.userAccountRepository = userAccountRepository;
         }
         
         [Authorize]
         public IActionResult Index()
         {
-            if (!HttpContext.Session.Keys.Contains("newuser"))
+            if (!userAccountRepository.HasMasterPassword(User))
             {
                 return Redirect("~/newuser");
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using AspNet.Security.OpenId;
+using KeepItSafer.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,8 @@ namespace KeepItSafer.Web
                 options.Cookies.ApplicationCookie.LogoutPath = new PathString("/signout");
                 options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
             });
+
+            services.AddDbContext<SqliteDataContext>();
             
             // Add framework services.
             services.AddMvc();
@@ -55,6 +58,7 @@ namespace KeepItSafer.Web
             });
             services.AddSingleton<IFileProvider>(hostingEnvironment.ContentRootFileProvider);
             services.AddSingleton<ICompilationService, KeepItSaferCompilationService>();
+            services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

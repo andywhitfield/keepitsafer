@@ -28,13 +28,12 @@ namespace KeepItSafer.Web.Tests.Models
             var account = new UserAccount();
             Assert.Null(account.PasswordDatabase);
 
-            var dbService = new PasswordDbService();
-            dbService.SetPasswordDb(db, account);
+            PasswordDbExtensions.SetPasswordDb(account, db);
 
             Assert.NotNull(account.PasswordDatabase);
             Assert.NotEqual("", account.PasswordDatabase);
 
-            var deserialized = dbService.GetPasswordDb(account);
+            var deserialized = PasswordDbExtensions.GetPasswordDb(account);
             Assert.NotNull(deserialized);
 
             Assert.Equal("hashed password", deserialized.MasterPassword);

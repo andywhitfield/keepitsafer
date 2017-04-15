@@ -3,9 +3,9 @@ using KeepItSafer.Crypto;
 
 namespace KeepItSafer.Web.Models
 {
-    public class PasswordDbService
+    public static class PasswordDbExtensions
     {
-        public PasswordDb GetPasswordDb(UserAccount userAccount)
+        public static PasswordDb GetPasswordDb(this UserAccount userAccount)
         {
             if (string.IsNullOrWhiteSpace(userAccount.PasswordDatabase))
             {
@@ -14,7 +14,7 @@ namespace KeepItSafer.Web.Models
             return JsonConvert.DeserializeObject<PasswordDb>(userAccount.PasswordDatabase);
         }
 
-        public void SetPasswordDb(PasswordDb passwordDb, UserAccount userAccount)
+        public static void SetPasswordDb(this UserAccount userAccount, PasswordDb passwordDb)
         {
             userAccount.PasswordDatabase = JsonConvert.SerializeObject(passwordDb);
         }

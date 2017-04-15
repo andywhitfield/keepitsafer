@@ -15,17 +15,17 @@ namespace KeepItSafer.Crypto
             algorithm = Aes.Create();
         }
 
-        public (string EncryptedValueBase64Encoded, string IVBase64Encoded, string SaltBase64Encoded) Encrypt(
-            string password, string ivBase64Encoded, string unencryptedValue)
+        public (string EncryptedValueBase64Encoded, byte[] IV, byte[] Salt) Encrypt(
+            string password, byte[] iv, string unencryptedValue)
         {
-            if (string.IsNullOrEmpty(ivBase64Encoded))
+            if (iv == null || iv.Length == 0)
             {
                 algorithm.GenerateIV();
-                ivBase64Encoded = Convert.ToBase64String(algorithm.IV);
+                iv = algorithm.IV;
             }
             else
             {
-                algorithm.IV = Convert.FromBase64String(ivBase64Encoded);
+                algorithm.IV = iv;
             }
 
             using (var passwordToBytes = new Rfc2898DeriveBytes(password, algorithm.KeySize))
@@ -41,18 +41,17 @@ namespace KeepItSafer.Crypto
                         encrypt.Write(unencryptedValueBytes, 0, unencryptedValueBytes.Length);
                         encrypt.FlushFinalBlock();
                     }
-                    return (Convert.ToBase64String(encryptionStreamBacking.ToArray()),
-                        ivBase64Encoded, Convert.ToBase64String(salt));
+                    return (Convert.ToBase64String(encryptionStreamBacking.ToArray()), iv, salt);
                 }
             }
         }
 
-        public string Decrypt(string password, string ivBase64Encoded, string saltBase64Encoded, string encryptedValueBase64Encoded)
+        public string Decrypt(string password, byte[] iv, byte[] salt, string encryptedValueBase64Encoded)
         {
-            algorithm.IV = Convert.FromBase64String(ivBase64Encoded);
+            algorithm.IV = iv;
             using (var passwordToBytes = new Rfc2898DeriveBytes(password, algorithm.KeySize))
             {
-                passwordToBytes.Salt = Convert.FromBase64String(saltBase64Encoded);
+                passwordToBytes.Salt = salt;
                 algorithm.Key = passwordToBytes.GetBytes(algorithm.KeySize / 8);
                 using (var decryptionStreamBacking = new MemoryStream())
                 {

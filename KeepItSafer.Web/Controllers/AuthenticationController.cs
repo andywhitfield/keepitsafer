@@ -1,4 +1,5 @@
 using System.Linq;
+using KeepItSafer.Web.Data;
 using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,13 @@ namespace KeepItSafer.Web.Controllers
 {
     public class AuthenticationController : Controller
     {
+        private readonly IUserAccountRepository userAccountRepository;
+
+        public AuthenticationController(IUserAccountRepository userAccountRepository)
+        {
+            this.userAccountRepository = userAccountRepository;
+        }
+
         [HttpGet("~/signin")]
         public IActionResult SignIn() => View("SignIn", HttpContext.Authentication.GetAuthenticationSchemes().FirstOrDefault(a => a.AuthenticationScheme == "smallid"));
 
@@ -32,26 +40,26 @@ namespace KeepItSafer.Web.Controllers
         [Authorize]
         public IActionResult CreateMasterPassword()
         {
-            if (HttpContext.Session.Keys.Contains("newuser"))
+            if (userAccountRepository.HasMasterPassword(User))
             {
                 return Redirect("~/");
             }
-
-            HttpContext.Session.Set("newuser", new byte[0]);
+            
             return View("CreateMasterPassword");
         }
 
         [HttpPost("~/newuser")]
+        [Authorize]
         public IActionResult CreateMasterPassword([FromForm] NewMasterPasswordInfo newDetails)
         {
-            // TODO: validate passwords are the same;
-            //       return a message back on the page in case of error
             if (!ModelState.IsValid)
             {
                 return CreateMasterPassword();
             }
 
-            HttpContext.Session.Set("newuser", new byte[0]);
+            // TODO: validate passwords are the same & handle any errors
+            userAccountRepository.CreateNewUser(User, newDetails.NewMasterPassword);
+
             return Redirect("~/");
         }
 

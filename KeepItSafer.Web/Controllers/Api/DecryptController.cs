@@ -1,4 +1,5 @@
 using KeepItSafer.Web.Models.Views;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,7 @@ namespace KeepItSafer.Web.Controllers.Api
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Decrypt([FromForm] EncryptDecryptInfo info)
         {
             logger.LogDebug("Received decrypt info: {0}", info);

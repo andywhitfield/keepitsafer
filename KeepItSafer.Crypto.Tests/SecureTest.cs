@@ -7,20 +7,20 @@ namespace KeepItSafer.Crypto.Tests
         [Fact]
         public void TestEncryptThenDecrypt()
         {
-            (string EncryptedValueBase64Encoded, string IVBase64Encoded, string SaltBase64Encoded) encrypted;
+            (string EncryptedValueBase64Encoded, byte[] IV, byte[] Salt) encrypted;
             using (var secure = new Secure())
             {
                 encrypted = secure.Encrypt("master password", null, "value to encrypt");
                 Assert.NotNull(encrypted);
                 Assert.NotEqual(encrypted.EncryptedValueBase64Encoded, "value to encrypt");
 
-                var decrypted = secure.Decrypt("master password", encrypted.IVBase64Encoded, encrypted.SaltBase64Encoded, encrypted.EncryptedValueBase64Encoded);
+                var decrypted = secure.Decrypt("master password", encrypted.IV, encrypted.Salt, encrypted.EncryptedValueBase64Encoded);
                 Assert.Equal("value to encrypt", decrypted);
             }
 
             using (var secure = new Secure())
             {
-                var decrypted = secure.Decrypt("master password", encrypted.IVBase64Encoded, encrypted.SaltBase64Encoded, encrypted.EncryptedValueBase64Encoded);
+                var decrypted = secure.Decrypt("master password", encrypted.IV, encrypted.Salt, encrypted.EncryptedValueBase64Encoded);
                 Assert.Equal("value to encrypt", decrypted);
             }
         }
