@@ -92,8 +92,8 @@ namespace KeepItSafer.Web
                 RequireHttpsMetadata = false
             });
 
-            app.UseMvcWithDefaultRoute();
             app.UseSession();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

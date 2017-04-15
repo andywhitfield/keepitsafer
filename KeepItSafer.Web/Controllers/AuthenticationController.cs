@@ -30,21 +30,35 @@ namespace KeepItSafer.Web.Controllers
 
         [HttpGet("~/newuser")]
         [Authorize]
-        public IActionResult CreateMasterPassword() => View("CreateMasterPassword");
+        public IActionResult CreateMasterPassword()
+        {
+            if (HttpContext.Session.Keys.Contains("newuser"))
+            {
+                return Redirect("~/");
+            }
+
+            HttpContext.Session.Set("newuser", new byte[0]);
+            return View("CreateMasterPassword");
+        }
 
         [HttpPost("~/newuser")]
         public IActionResult CreateMasterPassword([FromForm] NewMasterPasswordInfo newDetails)
         {
+            // TODO: validate passwords are the same;
+            //       return a message back on the page in case of error
             if (!ModelState.IsValid)
             {
                 return CreateMasterPassword();
             }
-            return new RedirectResult("~/");
+
+            HttpContext.Session.Set("newuser", new byte[0]);
+            return Redirect("~/");
         }
 
         [HttpGet("~/signout"), HttpPost("~/signout")]
         public IActionResult SignOut()
         {
+            HttpContext.Session.Clear();
             // Instruct the cookies middleware to delete the local cookie created
             // when the user agent is redirected from the external identity provider
             // after a successful authentication flow (e.g Google or Facebook).

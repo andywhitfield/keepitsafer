@@ -22,6 +22,11 @@ namespace KeepItSafer.Web.Controllers
         [Authorize]
         public IActionResult Index()
         {
+            if (!HttpContext.Session.Keys.Contains("newuser"))
+            {
+                return Redirect("~/newuser");
+            }
+
             var authId = User?.Claims?.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
             ViewData["UserName"] = authId;
 

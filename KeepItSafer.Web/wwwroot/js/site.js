@@ -1,7 +1,17 @@
 ﻿var groups;
 
-function initialisePasswordGroups() {
+function initialiseCommon() {
     groups = {};
+}
+
+function initialiseCreateMasterPassword() {
+    initialiseCommon();
+
+    $('#newmasterpassword').focus();
+}
+
+function initialisePasswordGroups() {
+    initialiseCommon();
     groups.groupsSection = $('#PasswordGroups');
     $('section', groups.groupsSection).children('article').hide();
     $('.group-section div', groups.groupsSection).click(toggleShowHideGroupItems);
@@ -19,6 +29,9 @@ function initialisePasswordGroups() {
         $('#addnewentryvalue').attr('type', $(this).is(':checked') ? 'password' : 'text');
     });
     $('#addnewentryform').submit(handleAddNewEntry);
+    $('#addnewentryform input[type="text"]').keyup(setAddNewEntryEnabledState);
+    $('#addnewentryform input[type="text"]').change(setAddNewEntryEnabledState);
+    setAddNewEntryEnabledState();
 
     $('#passwordgeneratorform').submit(handleGeneratePassword);
 }
@@ -188,15 +201,31 @@ function callDeleteEntry(groupEntryId, passwordEntryId, masterPassword, remember
          console.log('delete api call failed');
      });
 }
+function allowAddNewEntry() {
+    var allHaveValues = true;
+    $('#addnewentryform input[type="text"]').each(function(i) {
+        allHaveValues = allHaveValues && $(this).val() != '';
+    });
+    return allHaveValues;
+}
+function setAddNewEntryEnabledState() {
+    if (allowAddNewEntry()) {
+        $('#addnewentryform :submit').removeAttr("disabled");
+    } else {
+        $('#addnewentryform :submit').attr("disabled", "disabled");
+    }
+}
 function handleAddNewEntry(event) {
-    var frm = $('#addnewentryform');
-    var group = $('input[name=addnewentrygroup]', frm).val();
-    var entry = $('input[name=addnewentryname]', frm).val();
-    var valueEncrypted = $('input:checked[name=addnewentryvalueencrypted]', frm).val() || 'false';
-    var value = $('input[name=addnewentryvalue]', frm).val();
+    if (allowAddNewEntry()) {
+        var frm = $('#addnewentryform');
+        var group = $('input[name=addnewentrygroup]', frm).val();
+        var entry = $('input[name=addnewentryname]', frm).val();
+        var valueEncrypted = $('input:checked[name=addnewentryvalueencrypted]', frm).val() || 'false';
+        var value = $('input[name=addnewentryvalue]', frm).val();
 
-    console.log('submit add request with form details: group=' + group + ';entry=' + entry + ';valueEncrypted=' + valueEncrypted+';value='+value);
-    addNewEntry(group, entry, valueEncrypted, value);
+        console.log('submit add request with form details: group=' + group + ';entry=' + entry + ';valueEncrypted=' + valueEncrypted+';value='+value);
+        addNewEntry(group, entry, valueEncrypted, value);
+    }
 
     event.preventDefault();
     return false;
