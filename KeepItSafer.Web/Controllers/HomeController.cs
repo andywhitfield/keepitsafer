@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using KeepItSafer.Web.Data;
+using KeepItSafer.Web.Models;
+using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -77,7 +79,7 @@ namespace KeepItSafer.Web.Controllers
                 ViewData["decrypt"] = $"ex: {ex}";
             }
 
-            return View();
+            return View(new PasswordDbViewModel(userAccountRepository.GetUserAccount(User).GetPasswordDb()));
         }
 
         public IActionResult Error() => View();

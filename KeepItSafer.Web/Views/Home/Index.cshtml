@@ -1,24 +1,27 @@
-﻿<section id="PasswordGroups">
-<section data-id="group-1" class="group-section">
-    <div>Group 1</div>
-    <article>
-        <ul class="password-list">
-            <li data-id="group-1-item-1"><span class="password-name">Item 1</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <input type="button" value="Delete" /></span></li>
-            <li data-id="group-1-item-2"><span class="password-name">A second item, #2</span><span class="password-value"><input type="text" value="Some plaintext value" readonly="readonly" data-type="decrypted" data-decrypted="true"/> <input type="button" value="Delete" /></span></li>
-            <li data-id="group-1-item-3"><span class="password-name">Lastly, number 3</span><span class="password-value"><input type="text" value="The decrypted value" readonly="readonly" data-type="encrypted" data-decrypted="true"/> <input type="button" value="Delete" /></span></li>
-        </ul>
-    </article>
-</section>
+﻿@model KeepItSafer.Web.Models.Views.PasswordDbViewModel
 
-<section data-id="group-2" class="group-section">
-    <div>Group 2</div>
-    <article>
-        <ul class="password-list">
-            <li data-id="group-2-item-1"><span class="password-name">One encrypted</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <input type="button" value="Delete" /></span></li>
-            <li data-id="group-2-item-2"><span class="password-name">And another encrypted value! And another encrypted value!</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <input type="button" value="Delete" /></span></li>
-        </ul>
-    </article>
+<section id="PasswordGroups">
+@foreach (var group in Model.Groups)
+{
+<section data-id="@group.Name" class="group-section">
+<div>@group.Name</div>
+<article>
+    <ul class="password-list">
+        @foreach (var entry in group.Entries)
+        {
+            if (entry.IsValueEncrypted)
+            {
+        <li data-id="@entry.Name"><span class="password-name">@entry.Name</span><span class="password-value"><input type="text" value="****" readonly="readonly" data-type="encrypted" data-decrypted="false" title="Click to decrypt"/> <input type="button" value="Delete" /></span></li>
+            }
+            else
+            {
+        <li data-id="@entry.Name"><span class="password-name">@entry.Name</span><span class="password-value"><input type="text" value="@entry.Value" readonly="readonly" data-type="decrypted" data-decrypted="true"/> <input type="button" value="Delete" /></span></li>
+            }
+        }
+    </ul>
+</article>
 </section>
+}
 </section>
 
 <section id="AddNewEntry">
@@ -91,8 +94,7 @@
     Notes:
     <ul>
         <li>Implement the password db; implement the controller actions to load/update/etc.</li>
-        <li>Save master password for the length of the session (which we should set to a low value, e.g. 5 or 10 mins)</li>
-        <li>After logging in (or if skipped) and the master password hasn't been set, go to a page to enter a new master password...which on success will create a valid masterdb password entry in the database.</li>
+        <li>Finish up the 'new user' flow...password/confirm password validation.</li>
         <li>Implement dictionary stuff to generate new passwords</li>
         <li>Save / backup to Dropbox preferrably, but perhaps initially just allow download.</li>
         <li>Use the JS local storage library to save expanded group state.</li>

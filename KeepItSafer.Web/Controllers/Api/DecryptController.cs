@@ -1,3 +1,7 @@
+using System.Linq;
+using KeepItSafer.Crypto;
+using KeepItSafer.Web.Data;
+using KeepItSafer.Web.Models;
 using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +12,12 @@ namespace KeepItSafer.Web.Controllers.Api
     [Route("api/[controller]")]
     public class DecryptController : Controller
     {
+        private readonly IUserAccountRepository userAccountRepository;
         private readonly ILogger logger;
 
-        public DecryptController(ILogger<DecryptController> logger)
+        public DecryptController(IUserAccountRepository userAccountRepository, ILogger<DecryptController> logger)
         {
+            this.userAccountRepository = userAccountRepository;
             this.logger = logger;
         }
 
@@ -30,52 +36,78 @@ namespace KeepItSafer.Web.Controllers.Api
                 });
             }
 
-            if (info.Group == "group-2" && info.Entry == "group-2-item-1")
+            var masterPassword = info.MasterPassword;
+            if (string.IsNullOrWhiteSpace(masterPassword))
             {
-                if (string.IsNullOrWhiteSpace(info.MasterPassword))
+                masterPassword = this.RememberedMasterPassword();
+            }
+            else if (info.RememberMasterPassword)
+            {
+                this.RememberMasterPassword(info.MasterPassword);
+            }
+
+            if (string.IsNullOrWhiteSpace(masterPassword))
+            {
+                return new ObjectResult(new {
+                    Decrypted = false,
+                    Reason = ActionFailReason.NeedMasterPassword,
+                    Group = info.Group,
+                    Entry = info.Entry
+                });
+            }
+
+            using (var secure = new Secure())
+            {
+                var userAccount = userAccountRepository.GetUserAccount(User);
+                var passwordDb = userAccount.GetPasswordDb();
+
+                if (!secure.ValidateHash(masterPassword, passwordDb.MasterPassword))
                 {
                     return new ObjectResult(new {
-                        Decrypted = false,
-                        Reason = ActionFailReason.NeedMasterPassword,
-                        Group = info.Group,
-                        Entry = info.Entry
-                    });
-                }
-                else if (info.MasterPassword == "wrong")
-                {
-                    return new ObjectResult(new {
-                        Decrypted = false,
+                        Added = false,
                         Reason = ActionFailReason.MasterPasswordInvalid,
                         Group = info.Group,
                         Entry = info.Entry
                     });
                 }
-                else if (info.MasterPassword == "error")
+
+                var group = passwordDb.PasswordGroups.FirstOrDefault(pg => pg.GroupName == info.Group);
+                if (group == null)
                 {
                     return new ObjectResult(new {
                         Decrypted = false,
-                        Reason = -1,
+                        Reason = ActionFailReason.InvalidInput,
                         Group = info.Group,
                         Entry = info.Entry
                     });
                 }
-                else
+                var entry = group.PasswordEntries.FirstOrDefault(pe => pe.Name == info.Entry);
+                if (entry == null)
+                {
+                    return new ObjectResult(new {
+                        Decrypted = false,
+                        Reason = ActionFailReason.InvalidInput,
+                        Group = info.Group,
+                        Entry = info.Entry
+                    });
+                }
+                if (!entry.IsValueEncrypted)
                 {
                     return new ObjectResult(new {
                         Decrypted = true,
-                        DecryptedValue = "decrypted using master password!",
+                        DecryptedValue = entry.Value,
                         Group = info.Group,
                         Entry = info.Entry
                     });
                 }
+                
+                return new ObjectResult(new {
+                    Decrypted = true,
+                    DecryptedValue = secure.Decrypt(masterPassword, passwordDb.IV, entry.Salt, entry.Value),
+                    Group = info.Group,
+                    Entry = info.Entry
+                });
             }
-
-            return new ObjectResult(new {
-                Decrypted = true,
-                DecryptedValue = "hello world",
-                Group = info.Group,
-                Entry = info.Entry
-            });
         }
     }
 }
