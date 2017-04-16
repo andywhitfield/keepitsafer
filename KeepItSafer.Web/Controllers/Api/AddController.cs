@@ -77,10 +77,15 @@ namespace KeepItSafer.Web.Controllers.Api
                     group = new PasswordGroup { GroupName = info.Group };
                     passwordDb.PasswordGroups.Add(group);
                 }
-                var entry = new PasswordEntry {
-                    Name = info.Entry,
-                    IsValueEncrypted = info.ValueEncrypted
-                };
+                var entry = group.PasswordEntries.FirstOrDefault(pe => pe.Name == info.Entry);
+                if (entry == null)
+                {
+                    // no existing entry, adding a new one
+                    entry = new PasswordEntry { Name = info.Entry };
+                    group.PasswordEntries.Add(entry);
+                }
+                entry.IsValueEncrypted = info.ValueEncrypted;
+
                 if (info.ValueEncrypted)
                 {
                     var encryptedInfo = secure.Encrypt(masterPassword, passwordDb.IV, info.Value);
@@ -90,9 +95,9 @@ namespace KeepItSafer.Web.Controllers.Api
                 }
                 else
                 {
+                    entry.Salt = null;
                     entry.Value = info.Value;
                 }
-                group.PasswordEntries.Add(entry);
 
                 userAccount.SetPasswordDb(passwordDb);
                 userAccountRepository.SaveUserAccount(userAccount);

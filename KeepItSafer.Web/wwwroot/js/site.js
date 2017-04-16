@@ -121,9 +121,9 @@ function decrypt(groupEntryId, passwordEntryId, masterPassword, rememberMasterPa
         rememberMasterPassword: rememberMasterPassword || 'false'
     })
      .done(function(data) {
-        console.log('received decrypt: ' + data.decrypted + ':' + data.decryptedValue + ':' + data.reason);
+        console.log('received decrypt: ' + data.decrypted + ':' + data.decryptedValue + ':' + data.reason + ':group=' + groupEntryId + ':entry=' + passwordEntryId);
         if (data.decrypted) {
-            var passwordTextbox = $('section[data-id='+groupEntryId+'] li[data-id='+passwordEntryId+'] :text');
+            var passwordTextbox = $("section[data-id='"+groupEntryId+"'] li[data-id='"+passwordEntryId+"'] :text");
             passwordTextbox.val(data.decryptedValue);
             passwordTextbox.attr('data-decrypted', 'true');
             passwordTextbox.select();
