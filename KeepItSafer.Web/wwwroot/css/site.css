@@ -27,6 +27,8 @@ input[type="text"][data-type="encrypted"][data-decrypted="false"] { color: #aaaa
 #passwordgeneratorform input[type="number"] { width: 40px; }
 #passwordgeneratorform input[type="submit"] { margin-left: 190px; }
 
+.error { font-weight: bold; color: red; margin-bottom: 10px; }
+
 footer { clear: both; padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
 
 /* modal window styles */

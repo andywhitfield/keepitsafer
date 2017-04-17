@@ -13,7 +13,7 @@ namespace KeepItSafer.Web.Controllers.Api
     public class DeleteController : Controller
     {
         private readonly IUserAccountRepository userAccountRepository;
-        private readonly ILogger logger;
+        private readonly ILogger<DeleteController> logger;
 
         public DeleteController(IUserAccountRepository userAccountRepository, ILogger<DeleteController> logger)
         {

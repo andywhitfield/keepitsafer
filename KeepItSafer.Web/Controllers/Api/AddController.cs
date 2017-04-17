@@ -13,9 +13,9 @@ namespace KeepItSafer.Web.Controllers.Api
     public class AddController : Controller
     {
         private readonly IUserAccountRepository userAccountRepository;
-        private readonly ILogger logger;
+        private readonly ILogger<AddController> logger;
 
-        public AddController(IUserAccountRepository userAccountRepository, ILogger<DecryptController> logger)
+        public AddController(IUserAccountRepository userAccountRepository, ILogger<AddController> logger)
         {
             this.userAccountRepository = userAccountRepository;
             this.logger = logger;

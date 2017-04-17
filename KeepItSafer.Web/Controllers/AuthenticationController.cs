@@ -5,16 +5,20 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace KeepItSafer.Web.Controllers
 {
     public class AuthenticationController : Controller
     {
         private readonly IUserAccountRepository userAccountRepository;
+        private readonly ILogger<AuthenticationController> logger;
 
-        public AuthenticationController(IUserAccountRepository userAccountRepository)
+        public AuthenticationController(IUserAccountRepository userAccountRepository,
+            ILogger<AuthenticationController> logger)
         {
             this.userAccountRepository = userAccountRepository;
+            this.logger = logger;
         }
 
         [HttpGet("~/signin")]
@@ -38,14 +42,15 @@ namespace KeepItSafer.Web.Controllers
 
         [HttpGet("~/newuser")]
         [Authorize]
-        public IActionResult CreateMasterPassword()
+        public IActionResult CreateMasterPassword(string error = null)
         {
             if (userAccountRepository.HasMasterPassword(User))
             {
+                logger.LogDebug("User already has a master password, redirecting to the home page.");
                 return Redirect("~/");
             }
             
-            return View("CreateMasterPassword");
+            return View("CreateMasterPassword", error);
         }
 
         [HttpPost("~/newuser")]
@@ -54,12 +59,10 @@ namespace KeepItSafer.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return CreateMasterPassword();
+                return CreateMasterPassword("Please enter a master password and the confirm the same value below.");
             }
 
-            // TODO: validate passwords are the same & handle any errors
             userAccountRepository.CreateNewUser(User, newDetails.NewMasterPassword);
-
             return Redirect("~/");
         }
 

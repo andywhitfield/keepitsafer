@@ -1,6 +1,12 @@
 ﻿@model KeepItSafer.Web.Models.Views.PasswordDbViewModel
 
 <section id="PasswordGroups">
+@if (!Model.Groups.Any())
+{
+    <div>No saved entries.</div>
+    <div>Enter new passwords using the form below.</div>
+}
+
 @foreach (var group in Model.Groups)
 {
 <section data-id="@group.Name" class="group-section">
@@ -93,7 +99,6 @@
 <p style="clear:both;">
     Notes:
     <ul>
-        <li>Finish up the 'new user' flow...password/confirm password validation.</li>
         <li>Implement dictionary stuff to generate new passwords</li>
         <li>Save / backup to Dropbox preferrably, but perhaps initially just allow download.</li>
         <li>Use the JS local storage library to save expanded group state.</li>

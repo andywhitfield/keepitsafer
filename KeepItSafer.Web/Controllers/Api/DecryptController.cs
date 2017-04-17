@@ -13,7 +13,7 @@ namespace KeepItSafer.Web.Controllers.Api
     public class DecryptController : Controller
     {
         private readonly IUserAccountRepository userAccountRepository;
-        private readonly ILogger logger;
+        private readonly ILogger<DecryptController> logger;
 
         public DecryptController(IUserAccountRepository userAccountRepository, ILogger<DecryptController> logger)
         {
