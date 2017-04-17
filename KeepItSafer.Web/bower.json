@@ -4,6 +4,7 @@
   "dependencies": {
     "jquery": "3.2.1",
     "jquery-validation": "1.14.0",
-    "jquery-validation-unobtrusive": "3.2.6"
+    "jquery-validation-unobtrusive": "3.2.6",
+    "simpleStorage": "~0.2.1"
   }
 }

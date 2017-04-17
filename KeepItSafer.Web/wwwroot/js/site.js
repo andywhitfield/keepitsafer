@@ -1,7 +1,21 @@
-﻿var groups;
+﻿var localSettings;
 
 function initialiseCommon() {
-    groups = {};
+    localSettings = simpleStorage.get('keepitsafer');
+    if (localSettings == undefined) {
+        localSettings = { expanded: [] };
+    }
+}
+function saveLocalSettings() {
+    var expandedGroups = [];
+
+    var groupsSection = $('#PasswordGroups');
+    var groups = $('.group-section article:visible', groupsSection).each(function(i) {
+        expandedGroups.push($(this).parents('section').attr('data-id'));
+    });
+    localSettings.expanded = expandedGroups;
+    console.log('saving expanded groups: ' + expandedGroups);
+    simpleStorage.set('keepitsafer', localSettings);
 }
 
 function initialiseCreateMasterPassword() {
@@ -12,9 +26,9 @@ function initialiseCreateMasterPassword() {
 
 function initialisePasswordGroups() {
     initialiseCommon();
-    groups.groupsSection = $('#PasswordGroups');
-    $('section', groups.groupsSection).children('article').hide();
-    $('.group-section div', groups.groupsSection).click(toggleShowHideGroupItems);
+    var groupsSection = $('#PasswordGroups');
+    $('section', groupsSection).children('article').hide();
+    $('.group-section div', groupsSection).click(toggleShowHideGroupItems);
     $('.password-list input[type="text"]').click(decryptPassword);
     $('.password-list li').click(hideDecryptedPassword);
     $('.password-list input[type="button"]').click(deleteEntry);
@@ -34,6 +48,12 @@ function initialisePasswordGroups() {
     setAddNewEntryEnabledState();
 
     $('#passwordgeneratorform').submit(handleGeneratePassword);
+
+    var expandedGroups = localSettings.expanded;
+    console.log('restoring expanded groups: ' + expandedGroups);
+    $.each(expandedGroups, function(k, v) {
+        $(".group-section[data-id='"+v+"'] article", groupsSection).show();
+    });
 }
 
 function closeModalDialog() {
@@ -61,6 +81,7 @@ function toggleShowHideGroupItems() {
     console.log('group clicked: ' + group.parent().attr('data-id'));
     group.next().toggle();
     $(window).scrollTop(group.position().top);
+    saveLocalSettings();
 }
 function hideDecryptedPassword() {
     var passwordTextbox = $('input[type="text"]', $(this));
