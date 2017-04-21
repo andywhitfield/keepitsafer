@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AspNet.Security.OpenId;
+using KeepItSafer.Crypto.PasswordGenerator;
 using KeepItSafer.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
 namespace KeepItSafer.Web
@@ -56,9 +57,14 @@ namespace KeepItSafer.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(5);
                 options.CookieHttpOnly = true;
             });
-            services.AddSingleton<IFileProvider>(hostingEnvironment.ContentRootFileProvider);
             services.AddSingleton<ICompilationService, KeepItSaferCompilationService>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+            services.AddSingleton<WordDictionary>(serviceProvider => {
+                var dict = new WordDictionary();
+                Task.Run(() => dict.LoadAsync());
+                return dict;
+            });
+            services.AddTransient<RandomPasswordGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

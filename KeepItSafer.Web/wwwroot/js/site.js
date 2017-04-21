@@ -302,6 +302,26 @@ function handleGeneratePassword(event) {
 
     console.log('generate passwords given min='+minLength+';max='+maxLength+';special='+allowSpecialChars+';numbers='+allowNumbers);
 
+    $.post('/api/genpasswords', {
+        minLength: minLength,
+        maxLength: maxLength,
+        allowSpecialCharacters: allowSpecialChars,
+        allowNumbers: allowNumbers
+    })
+     .done(function(data) {
+        console.log('received generate passwords result: ' + data.passwords);
+        var passwordDiv = $('#genpassoutput');
+        passwordDiv.empty();
+        $.each(data.passwords, function(k, v) {
+            var newInput = $('<input />').attr('type', 'text').val(v);
+            passwordDiv.append(newInput).append('<br />');
+        });
+        $('input', passwordDiv).click(function() { $(this).select(); });
+     })
+     .fail(function() {
+        console.log('generate password api call failed');
+     });
+
     event.preventDefault();
     return false;
 }

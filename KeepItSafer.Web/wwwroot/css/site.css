@@ -26,6 +26,7 @@ input[type="text"][data-type="encrypted"][data-decrypted="false"] { color: #aaaa
 #passwordgeneratorform label { width: 185px; display: inline-block; }
 #passwordgeneratorform input[type="number"] { width: 40px; }
 #passwordgeneratorform input[type="submit"] { margin-left: 190px; }
+#genpassoutput input { width: 245px; }
 
 .error { font-weight: bold; color: red; margin-bottom: 10px; }
 
