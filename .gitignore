@@ -99,7 +99,7 @@ publish
 # Others
 [Bb]in
 [Oo]bj
-sql
+#sql
 TestResults
 *.Cache
 ClientBin
@@ -114,7 +114,7 @@ _UpgradeReport_Files/
 Backup*/
 UpgradeLog*.XML
 
-Data/
+#Data/
 App_Data/
 
 ############
