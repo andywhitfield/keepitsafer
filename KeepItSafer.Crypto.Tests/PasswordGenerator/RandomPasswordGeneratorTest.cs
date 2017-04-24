@@ -52,7 +52,7 @@ namespace KeepItSafer.Crypto.Tests.PasswordGenerator
             randomPasswordGenerator.AllowNumbers = false;
             foreach (var password in GeneratePasswords(randomPasswordGenerator))
             {
-                Assert.False(password.Any(c => char.IsNumber(c)));
+                Assert.False(password.Any(c => char.IsDigit(c)));
             }
 
             randomPasswordGenerator.AllowNumbers = true;
