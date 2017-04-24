@@ -8,7 +8,7 @@ namespace KeepItSafer.Web.Models.Views
     {
         public PasswordDbViewModel(PasswordDb db)
         {
-            Groups = db.PasswordGroups.Select(pg => new GroupViewModel(pg));
+            Groups = db.PasswordGroups.Select(pg => new GroupViewModel(pg)).OrderBy(pg => pg.Name);
         }
 
         public IEnumerable<GroupViewModel> Groups { get; }

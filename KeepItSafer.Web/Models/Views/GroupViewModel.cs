@@ -9,7 +9,7 @@ namespace KeepItSafer.Web.Models.Views
         public GroupViewModel(PasswordGroup group)
         {
             Name = group.GroupName;
-            Entries = group.PasswordEntries.Select(pe => new EntryViewModel(pe));
+            Entries = group.PasswordEntries.Select(pe => new EntryViewModel(pe)).OrderBy(pe => pe.Name);
         }
         
         public string Name { get; }

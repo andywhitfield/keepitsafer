@@ -8,5 +8,7 @@ namespace KeepItSafer.Web.Models.Views
         public int MinLength { get; set; }
         [Required]
         public int MaxLength { get; set; }
+        public bool AllowSpecialCharacters { get; set; } = true;
+        public bool AllowNumbers { get; set; } = true;
     }
 }

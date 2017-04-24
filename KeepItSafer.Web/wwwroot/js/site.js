@@ -29,7 +29,7 @@ function initialisePasswordGroups() {
     var groupsSection = $('#PasswordGroups');
     $('section', groupsSection).children('article').hide();
     $('.group-section div', groupsSection).click(toggleShowHideGroupItems);
-    $('.password-list input[type="text"]').click(decryptPassword);
+    $('.password-list input[type="text"]').click(decryptPassword).mouseup(function(e) { e.preventDefault(); });
     $('.password-list li').click(hideDecryptedPassword);
     $('.password-list input[type="button"]').click(deleteEntry);
 
@@ -316,7 +316,7 @@ function handleGeneratePassword(event) {
             var newInput = $('<input />').attr('type', 'text').val(v);
             passwordDiv.append(newInput).append('<br />');
         });
-        $('input', passwordDiv).click(function() { $(this).select(); });
+        $('input', passwordDiv).click(function() { $(this).select(); }).mouseup(function(e) { e.preventDefault(); });
      })
      .fail(function() {
         console.log('generate password api call failed');

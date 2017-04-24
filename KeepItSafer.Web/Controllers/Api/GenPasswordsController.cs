@@ -32,6 +32,8 @@ namespace KeepItSafer.Web.Controllers.Api
 
             passwordGenerator.MinimumLength = info.MinLength;
             passwordGenerator.MaximumLength = info.MaxLength;
+            passwordGenerator.AllowNumbers = info.AllowNumbers;
+            passwordGenerator.AllowPunctuation = info.AllowSpecialCharacters;
 
             return new ObjectResult(new {
                 Passwords = Enumerable.Range(0, 10).Select(i => passwordGenerator.Generate()).ToArray()
