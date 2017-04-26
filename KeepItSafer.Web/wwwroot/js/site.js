@@ -122,7 +122,7 @@ function decryptPassword() {
     var passwordTextbox = $(this);
     if (passwordTextbox.attr('data-type') != 'encrypted' || passwordTextbox.attr('data-decrypted') == 'true') {
         console.log('password not encrypted or already decrypted, nothing to do.');
-        passwordTextbox.select();
+        passwordTextbox[0].setSelectionRange(0, 9999);
         return false;
     }
 
@@ -147,7 +147,7 @@ function decrypt(groupEntryId, passwordEntryId, masterPassword, rememberMasterPa
             var passwordTextbox = $("section[data-id='"+groupEntryId+"'] li[data-id='"+passwordEntryId+"'] :text");
             passwordTextbox.val(data.decryptedValue);
             passwordTextbox.attr('data-decrypted', 'true');
-            passwordTextbox.select();
+            passwordTextbox[0].setSelectionRange(0, 9999);
             return;
         }
 
@@ -195,7 +195,7 @@ function callDeleteEntry(groupEntryId, passwordEntryId, masterPassword, remember
      .done(function(data) {
         console.log('received delete result: ' + data.deleted + ':' + data.reason);
         if (data.deleted) {
-            location.reload();
+            location.reload(true);
             return;
         }
 
@@ -263,7 +263,7 @@ function addNewEntry(group, entry, valueEncrypted, value, masterPassword, rememb
      .done(function(data) {
         console.log('received add result: ' + data.added + ':' + data.reason);
         if (data.added) {
-            location.reload();
+            location.reload(true);
             return;
         }
 
@@ -316,7 +316,7 @@ function handleGeneratePassword(event) {
             var newInput = $('<input />').attr('type', 'text').val(v);
             passwordDiv.append(newInput).append('<br />');
         });
-        $('input', passwordDiv).click(function() { $(this).select(); }).mouseup(function(e) { e.preventDefault(); });
+        $('input', passwordDiv).click(function() { $(this)[0].setSelectionRange(0, 9999); }).mouseup(function(e) { e.preventDefault(); });
      })
      .fail(function() {
         console.log('generate password api call failed');
