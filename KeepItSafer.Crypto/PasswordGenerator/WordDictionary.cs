@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +17,8 @@ namespace KeepItSafer.Crypto.PasswordGenerator
             BaseResourcePath + "data.noun",
             BaseResourcePath + "data.verb"
         };
-        private static Regex WordPattern = new Regex("^[0-9]{8} [0-9]{2} . [0-9]{2} (?<word>[^\\s]+) .*$", RegexOptions.Compiled | RegexOptions.Singleline);
 
-        private ISet<string> words = new HashSet<string>();
+        private ICollection<string> words = new string[0];
         private readonly ManualResetEvent loadedEvent = new ManualResetEvent(false);
         
         public WordDictionary()
@@ -27,7 +27,7 @@ namespace KeepItSafer.Crypto.PasswordGenerator
 
         public EventWaitHandle DictionaryLoadedWaitHandle { get { return loadedEvent; } }
 
-        public ISet<string> Words { get { return words; }}
+        public ICollection<string> Words { get { return words; }}
 
         public async Task<int> LoadAsync()
         {
@@ -36,8 +36,9 @@ namespace KeepItSafer.Crypto.PasswordGenerator
                 return words.Count;
             }
             
-            var dictWords = new HashSet<string>();
+            var dictWords = new List<string>(150000);
             var assem = typeof(WordDictionary).GetTypeInfo().Assembly;
+            var word = new StringBuilder();
             foreach (var dict in DictionaryFiles)
             {
                 using (var dictStream = new StreamReader(assem.GetManifestResourceStream(dict)))
@@ -45,12 +46,23 @@ namespace KeepItSafer.Crypto.PasswordGenerator
                     string line;
                     while ((line = await dictStream.ReadLineAsync()) != null)
                     {
-                        var matches = WordPattern.Matches(line);
-                        if (matches.Count != 1)
+                        // lots of magic numbers...
+                        // the dictionary line has 16 characters of preamble, followed
+                        // by a space (index 16), then the word followed by a space.
+                        if (line.Length < 18 || line[0] == ' ' || line[16] != ' ')
                         {
                             continue;
                         }
-                        dictWords.Add(matches[0].Groups["word"].Value.Replace('_', ' '));
+                        word.Clear();
+                        foreach (var c in line.Skip(17))
+                        {
+                            if (c == ' ')
+                            {
+                                break;
+                            }
+                            word.Append(c == '_' ? ' ' : c);
+                        }
+                        dictWords.Add(word.ToString());
                     }
                 }
             }

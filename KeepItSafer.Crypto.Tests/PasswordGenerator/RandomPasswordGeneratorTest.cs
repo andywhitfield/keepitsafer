@@ -52,14 +52,14 @@ namespace KeepItSafer.Crypto.Tests.PasswordGenerator
             randomPasswordGenerator.AllowNumbers = false;
             foreach (var password in GeneratePasswords(randomPasswordGenerator))
             {
-                Assert.False(password.Any(c => char.IsDigit(c)));
+                Assert.False(password.Any(c => char.IsDigit(c)), $"Password contains number! ${password}");
             }
 
             randomPasswordGenerator.AllowNumbers = true;
             randomPasswordGenerator.AllowPunctuation = false;
             foreach (var password in GeneratePasswords(randomPasswordGenerator))
             {
-                Assert.True(password.All(c => char.IsLetterOrDigit(c)));
+                Assert.True(password.All(c => char.IsLetterOrDigit(c)), $"Password contains punctunation! ${password}");
             }
         }
 

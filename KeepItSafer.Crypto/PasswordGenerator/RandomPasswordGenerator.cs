@@ -86,7 +86,7 @@ namespace KeepItSafer.Crypto.PasswordGenerator
 
             return password.ToString();
         }
-        private string WordFrom(ISet<string> words, bool checkFirstCharacter = true, string excluding = null, int? maxWordLength = null)
+        private string WordFrom(ICollection<string> words, bool checkFirstCharacter = true, string excluding = null, int? maxWordLength = null)
         {
             IEnumerable<string> eligibleWords = words;
             if (maxWordLength.HasValue && maxWordLength > 0)
