@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using KeepItSafer.Crypto.PasswordGenerator;
 using KeepItSafer.Web.Models.Views;
@@ -35,9 +36,22 @@ namespace KeepItSafer.Web.Controllers.Api
             passwordGenerator.AllowNumbers = info.AllowNumbers;
             passwordGenerator.AllowPunctuation = info.AllowSpecialCharacters;
 
-            return new ObjectResult(new {
-                Passwords = Enumerable.Range(0, 10).Select(i => passwordGenerator.Generate()).ToArray()
-            });
+            return new ObjectResult(new { Passwords = GeneratePasswords().ToArray() });
+        }
+
+        private IEnumerable<string> GeneratePasswords()
+        {
+            var randomPassword = passwordGenerator.Generate();
+            // password generator not yet ready to handle requests, return early...
+            if (randomPassword == null)
+            {
+                yield break;
+            }
+            yield return randomPassword;
+            for (var i = 0; i < 7; i++)
+            {
+                yield return passwordGenerator.Generate();
+            }
         }
     }
 }

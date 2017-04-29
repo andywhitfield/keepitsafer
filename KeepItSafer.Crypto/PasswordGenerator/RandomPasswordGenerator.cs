@@ -51,7 +51,10 @@ namespace KeepItSafer.Crypto.PasswordGenerator
                 maxPasswordLength--;
             }
 
-            dictionary.DictionaryLoadedWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+            if (!dictionary.DictionaryLoadedWaitHandle.WaitOne(TimeSpan.FromSeconds(1)))
+            {
+                return null;
+            }
 
             do
             {

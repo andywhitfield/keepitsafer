@@ -312,6 +312,12 @@ function handleGeneratePassword(event) {
         console.log('received generate passwords result: ' + data.passwords);
         var passwordDiv = $('#genpassoutput');
         passwordDiv.empty();
+
+        if (data.passwords.length == 0) {
+            passwordDiv.text('Word dictionary loading...please try again in a few moments.');
+            return;
+        }
+
         $.each(data.passwords, function(k, v) {
             var newInput = $('<input />').attr('type', 'text').val(v);
             passwordDiv.append(newInput).append('<br />');
