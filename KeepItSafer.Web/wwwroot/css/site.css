@@ -28,6 +28,8 @@ input[type="text"][data-type="encrypted"][data-decrypted="false"] { color: #aaaa
 #passwordgeneratorform input[type="submit"] { margin-left: 190px; }
 #genpassoutput input { width: 245px; }
 
+.end-section { clear: both; padding-top: 20px; }
+
 .error { font-weight: bold; color: red; margin-bottom: 10px; }
 
 footer { clear: both; padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
