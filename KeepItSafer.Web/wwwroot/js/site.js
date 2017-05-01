@@ -29,8 +29,8 @@ function initialisePasswordGroups() {
     var groupsSection = $('#PasswordGroups');
     $('section', groupsSection).children('article').hide();
     $('.group-section div', groupsSection).click(toggleShowHideGroupItems);
-    $('.password-list input[type="text"]').click(decryptPassword).mouseup(function(e) { e.preventDefault(); });
-    $('.password-list li').click(hideDecryptedPassword);
+    $('.password-list input[type="text"]').mousedown(decryptPassword);
+    $('.password-list li').mousedown(hideDecryptedPassword);
     $('.password-list input[type="button"]').click(deleteEntry);
 
     $("#modal-background, #modal-close, #modal-content input[value='Cancel']").click(function () { closeModalDialog(); });
@@ -118,12 +118,19 @@ function handleMasterPasswordEntered(event) {
     event.preventDefault();
     return false;
 }
-function decryptPassword() {
+function decryptPassword(e) {
+    e.stopPropagation();
+
+    // if the input already has focus, nothing to do
+    if ($(this).is(':focus')) { return; }
+
     var passwordTextbox = $(this);
     if (passwordTextbox.attr('data-type') != 'encrypted' || passwordTextbox.attr('data-decrypted') == 'true') {
         console.log('password not encrypted or already decrypted, nothing to do.');
-        passwordTextbox[0].setSelectionRange(0, 9999);
-        return false;
+        setTimeout(function() {
+            passwordTextbox[0].setSelectionRange(0, 9999);
+        }, 10);
+        return;
     }
 
     // otherwise decrypt
@@ -322,7 +329,14 @@ function handleGeneratePassword(event) {
             var newInput = $('<input />').attr('type', 'text').val(v);
             passwordDiv.append(newInput).append('<br />');
         });
-        $('input', passwordDiv).click(function() { $(this)[0].setSelectionRange(0, 9999); }).mouseup(function(e) { e.preventDefault(); });
+        $('input', passwordDiv).mousedown(function(e) {
+            e.stopPropagation();
+            if ($(this).is(':focus')) { return; }
+            var inputEl = $(this)[0];
+            window.setTimeout(function() {
+                inputEl.setSelectionRange(0, 9999);
+            }, 10);
+        });
      })
      .fail(function() {
         console.log('generate password api call failed');
