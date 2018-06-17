@@ -44,12 +44,12 @@ namespace KeepItSafer.Web.Tests.Models
             Assert.Equal(2, deserialized.PasswordGroups.ElementAt(0).PasswordEntries.Count);
 
             Assert.Equal("entry 1.1", deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(0).Name);
-            Assert.Equal(false, deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(0).IsValueEncrypted);
+            Assert.False(deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(0).IsValueEncrypted);
             Assert.Equal("plain text 1.1", deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(0).Value);
-            Assert.Equal(null, deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(0).Salt);
+            Assert.Null(deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(0).Salt);
 
             Assert.Equal("entry 1.2", deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(1).Name);
-            Assert.Equal(true, deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(1).IsValueEncrypted);
+            Assert.True(deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(1).IsValueEncrypted);
             Assert.Equal("encrypted value 1.2", deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(1).Value);
             Assert.Equal(new byte[] { 1, 2 }, deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(1).Salt);
             
@@ -57,7 +57,7 @@ namespace KeepItSafer.Web.Tests.Models
             Assert.Equal(1, deserialized.PasswordGroups.ElementAt(1).PasswordEntries.Count);
 
             Assert.Equal("entry 2.1", deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).Name);
-            Assert.Equal(true, deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).IsValueEncrypted);
+            Assert.True(deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).IsValueEncrypted);
             Assert.Equal("encrypted value 2.1", deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).Value);
             Assert.Equal(new byte[] { 2, 1 }, deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).Salt);
         }

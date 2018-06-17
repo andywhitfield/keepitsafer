@@ -1,25 +1,21 @@
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using Microsoft.AspNetCore.Mvc.Razor.Internal;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.Razor.Extensions;
+using Microsoft.AspNetCore.Razor.Language;
 
 namespace KeepItSafer.Web
 {
-    public class KeepItSaferCompilationService : DefaultRoslynCompilationService, ICompilationService
+    public class KeepItSaferCompilationService : MvcRazorTemplateEngine
     {
-        public KeepItSaferCompilationService(CSharpCompiler compiler,
-            IRazorViewEngineFileProviderAccessor fileProviderAccessor,
-            IOptions<RazorViewEngineOptions> optionsAccessor,
-            ILoggerFactory loggerFactory)
-            : base(compiler, fileProviderAccessor, optionsAccessor, loggerFactory)
+        public KeepItSaferCompilationService(RazorEngine engine, RazorProject project)
+            : base(engine, project)
         {
         }
 
-        CompilationResult ICompilationService.Compile(RelativeFileInfo fileInfo,
-            string compilationContent)
+        public override RazorCSharpDocument GenerateCode(RazorCodeDocument codeDocument)
         {
-            return base.Compile(fileInfo, compilationContent);
+            RazorCSharpDocument razorCSharpDocument = base.GenerateCode(codeDocument);
+            // Set breakpoint here for inspecting the generated C# code in razorCSharpDocument.GeneratedCode
+            // The razor code can be inspected in the Autos or Locals window in codeDocument.Source._innerSourceDocument._content 
+            return razorCSharpDocument;
         }
     }
 }

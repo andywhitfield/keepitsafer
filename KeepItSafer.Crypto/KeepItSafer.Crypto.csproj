@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
-    <PackageReference Include="BCrypt.Net-Core" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="*" />
+    <PackageReference Include="BCrypt.Net-Next" Version="*" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dictionary\data.*" />

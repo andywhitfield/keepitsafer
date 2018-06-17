@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -37,29 +39,37 @@ namespace KeepItSafer.Web
         {
             services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddAuthentication(options =>
+            services
+                .AddAuthentication(o => {
+                    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(o => {
+                    o.LoginPath = "/signin";
+                    o.LogoutPath = "/signout";
+                    o.Cookie.HttpOnly = true;
+                    o.ExpireTimeSpan = TimeSpan.FromDays(150);
+                })
+                .AddOpenId("SmallId", "SmallId", o => {
+                    o.CallbackPath = "/signin-smallid";
+                    o.Configuration = new OpenIdAuthenticationConfiguration {
+                        AuthenticationEndpoint = "https://smallid.nosuchblogger.com/openid/provider"
+                    };
+                });
+
+            services.Configure<CookiePolicyOptions>(o =>
             {
-                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            });
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Cookies.ApplicationCookie.LoginPath = new PathString("/signin");
-                options.Cookies.ApplicationCookie.LogoutPath = new PathString("/signout");
-                options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
+                o.CheckConsentNeeded = context => true;
+                o.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
             services.AddDbContext<SqliteDataContext>();
             
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
             services.AddCors();
             services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(5);
-                options.CookieHttpOnly = true;
-            });
-            services.AddSingleton<ICompilationService, KeepItSaferCompilationService>();
+            services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(5));
+            services.AddSingleton<RazorTemplateEngine, KeepItSaferCompilationService>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             services.AddSingleton<WordDictionary>(serviceProvider => {
                 var dict = new WordDictionary();
@@ -86,25 +96,9 @@ namespace KeepItSafer.Web
             }
 
             app.UseStaticFiles();
-
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                LoginPath = new PathString("/signin"),
-                LogoutPath = new PathString("/signout")
-            });
-
-            app.UseOpenIdAuthentication(new OpenIdAuthenticationOptions
-            {
-                AuthenticationScheme = "smallid",
-                DisplayName = "SmallId",
-                Authority = new Uri("http://smallid.nosuchblogger.com"),
-                CallbackPath = new PathString("/signin-smallid"),
-                RequireHttpsMetadata = false
-            });
-
             app.UseSession();
+            app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
         }
     }

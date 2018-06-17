@@ -1,10 +1,13 @@
 using System.Linq;
+using System.Threading.Tasks;
 using KeepItSafer.Web.Data;
 using KeepItSafer.Web.Models.Views;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace KeepItSafer.Web.Controllers
@@ -21,8 +24,19 @@ namespace KeepItSafer.Web.Controllers
             this.logger = logger;
         }
 
+        private async Task<AuthenticationScheme> GetExternalProvider()
+        {
+            var allSchemes = await HttpContext
+                .RequestServices
+                .GetRequiredService<IAuthenticationSchemeProvider>()
+                .GetAllSchemesAsync();
+            return allSchemes
+                .Where(scheme => !string.IsNullOrEmpty(scheme.DisplayName))
+                .FirstOrDefault(scheme => scheme.Name == "SmallId");
+        }
+
         [HttpGet("~/signin")]
-        public IActionResult SignIn() => View("SignIn", HttpContext.Authentication.GetAuthenticationSchemes().FirstOrDefault(a => a.AuthenticationScheme == "smallid"));
+        public async Task<IActionResult> SignIn() => View("SignIn", await GetExternalProvider());
 
         [HttpPost("~/signin")]
         public IActionResult SignIn([FromForm] string provider)

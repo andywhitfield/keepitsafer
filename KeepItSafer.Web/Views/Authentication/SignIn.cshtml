@@ -1,10 +1,10 @@
-@using Microsoft.AspNetCore.Http.Authentication
-@model AuthenticationDescription
+@using Microsoft.AspNetCore.Authentication
+@model AuthenticationScheme
 
 <h1>Login</h1>
 
 <form action="@Url.Content("~/signin")" method="post">
-    <input type="hidden" name="Provider" value="@Model.AuthenticationScheme" />
+    <input type="hidden" name="Provider" value="@Model.Name" />
     <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
 
     <p>

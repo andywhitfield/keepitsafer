@@ -11,8 +11,7 @@ namespace KeepItSafer.Crypto.Tests
             using (var secure = new Secure())
             {
                 encrypted = secure.Encrypt("master password", null, "value to encrypt");
-                Assert.NotNull(encrypted);
-                Assert.NotEqual(encrypted.EncryptedValueBase64Encoded, "value to encrypt");
+                Assert.NotEqual("value to encrypt", encrypted.EncryptedValueBase64Encoded);
 
                 var decrypted = secure.Decrypt("master password", encrypted.IV, encrypted.Salt, encrypted.EncryptedValueBase64Encoded);
                 Assert.Equal("value to encrypt", decrypted);
