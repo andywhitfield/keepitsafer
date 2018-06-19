@@ -34,7 +34,6 @@ namespace KeepItSafer.Web
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(Configuration);
@@ -58,7 +57,7 @@ namespace KeepItSafer.Web
 
             services.Configure<CookiePolicyOptions>(o =>
             {
-                o.CheckConsentNeeded = context => true;
+                o.CheckConsentNeeded = context => false;
                 o.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -97,7 +96,6 @@ namespace KeepItSafer.Web
 
             app.UseStaticFiles();
             app.UseSession();
-            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
         }
