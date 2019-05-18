@@ -16,7 +16,7 @@
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceRoot}/KeepItSafer.Web/bin/Debug/netcoreapp2.1/KeepItSafer.Web.dll",
+            "program": "${workspaceRoot}/KeepItSafer.Web/bin/Debug/netcoreapp2.2/KeepItSafer.Web.dll",
             "args": [],
             "cwd": "${workspaceRoot}/KeepItSafer.Web",
             "stopAtEntry": false,
