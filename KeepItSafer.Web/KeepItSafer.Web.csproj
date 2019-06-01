@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="*"/>
     <PackageReference Include="Microsoft.AspNetCore" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="*"/>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="*"/>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="*"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="*"/>

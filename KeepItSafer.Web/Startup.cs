@@ -19,7 +19,7 @@ namespace KeepItSafer.Web
     public class Startup
     {
         private IHostingEnvironment hostingEnvironment;
-        
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -39,21 +39,31 @@ namespace KeepItSafer.Web
             services.AddSingleton<IConfiguration>(Configuration);
 
             services
-                .AddAuthentication(o => {
+                .AddAuthentication(o =>
+                {
                     o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
-                .AddCookie(o => {
+                .AddCookie(o =>
+                {
                     o.LoginPath = "/signin";
                     o.LogoutPath = "/signout";
                     o.Cookie.HttpOnly = true;
                     o.ExpireTimeSpan = TimeSpan.FromDays(150);
                 })
-                .AddOpenId("SmallId", "SmallId", o => {
+                .AddOpenId("SmallId", "SmallId", o =>
+                {
                     o.CallbackPath = "/signin-smallid";
-                    o.Configuration = new OpenIdAuthenticationConfiguration {
+                    o.Configuration = new OpenIdAuthenticationConfiguration
+                    {
                         AuthenticationEndpoint = "https://smallid.nosuchblogger.com/openid/provider"
                     };
                 });
+
+            services.AddLogging(logging =>
+            {
+                logging.AddConsole();
+                logging.AddDebug();
+            });
 
             services.Configure<CookiePolicyOptions>(o =>
             {
@@ -62,7 +72,7 @@ namespace KeepItSafer.Web
             });
 
             services.AddDbContext<SqliteDataContext>();
-            
+
             // Add framework services.
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
             services.AddCors();
@@ -70,7 +80,8 @@ namespace KeepItSafer.Web
             services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(5));
             services.AddSingleton<RazorTemplateEngine, KeepItSaferCompilationService>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
-            services.AddSingleton<WordDictionary>(serviceProvider => {
+            services.AddSingleton<WordDictionary>(serviceProvider =>
+            {
                 var dict = new WordDictionary();
                 Task.Run(() => dict.LoadAsync());
                 return dict;
@@ -81,9 +92,6 @@ namespace KeepItSafer.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

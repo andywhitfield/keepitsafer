@@ -2,9 +2,9 @@
   "name": "asp.net",
   "private": true,
   "dependencies": {
-    "jquery": "3.2.1",
-    "jquery-validation": "1.14.0",
-    "jquery-validation-unobtrusive": "3.2.6",
+    "jquery": "3.4.1",
+    "jquery-validation": "1.19.0",
+    "jquery-validation-unobtrusive": "3.2.11",
     "simpleStorage": "~0.2.1"
   }
 }
