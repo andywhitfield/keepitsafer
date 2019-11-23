@@ -5,18 +5,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore" Version="*"/>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.*"/>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore.Session" Version="*"/>
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="*"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.*"/>
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="*"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="*"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="*" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.*"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.*" PrivateAssets="All"/>
     <PackageReference Include="AspNet.Security.OpenId" Version="2.0.0-rc2-final"/>
     <PackageReference Include="BCrypt.Net-Next" Version="*"/>
   </ItemGroup>
