@@ -1,13 +1,11 @@
-using System.Linq;
-using System.Threading.Tasks;
 using KeepItSafer.Web.Data;
 using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace KeepItSafer.Web.Controllers
@@ -24,34 +22,14 @@ namespace KeepItSafer.Web.Controllers
             this.logger = logger;
         }
 
-        private async Task<AuthenticationScheme> GetExternalProvider()
-        {
-            var allSchemes = await HttpContext
-                .RequestServices
-                .GetRequiredService<IAuthenticationSchemeProvider>()
-                .GetAllSchemesAsync();
-            return allSchemes
-                .Where(scheme => !string.IsNullOrEmpty(scheme.DisplayName))
-                .FirstOrDefault(scheme => scheme.Name == "SmallId");
-        }
 
         [HttpGet("~/signin")]
-        public async Task<IActionResult> SignIn() => View("SignIn", await GetExternalProvider());
+        public IActionResult SignIn() => View("SignIn");
 
         [HttpPost("~/signin")]
-        public IActionResult SignIn([FromForm] string provider)
+        public IActionResult SignInChallenge()
         {
-            // Note: the "provider" parameter corresponds to the external
-            // authentication provider choosen by the user agent.
-            if (string.IsNullOrWhiteSpace(provider))
-            {
-                return BadRequest();
-            }
-
-            // Instruct the middleware corresponding to the requested external identity
-            // provider to redirect the user agent to its own authorization endpoint.
-            // Note: the authenticationScheme parameter must match the value configured in Startup.cs
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, provider);
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         [HttpGet("~/newuser")]
@@ -84,11 +62,7 @@ namespace KeepItSafer.Web.Controllers
         public IActionResult SignOut()
         {
             HttpContext.Session.Clear();
-            // Instruct the cookies middleware to delete the local cookie created
-            // when the user agent is redirected from the external identity provider
-            // after a successful authentication flow (e.g Google or Facebook).
-            return SignOut(new AuthenticationProperties { RedirectUri = "/" },
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            return SignOut(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
         }
     }
 }

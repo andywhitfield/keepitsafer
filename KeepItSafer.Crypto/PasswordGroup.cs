@@ -4,12 +4,7 @@ namespace KeepItSafer.Crypto
 {
     public class PasswordGroup
     {
-        public PasswordGroup()
-        {
-            PasswordEntries = new List<PasswordEntry>();
-        }
-
         public string GroupName { get; set; }
-        public ICollection<PasswordEntry> PasswordEntries { get; private set; }
+        public List<PasswordEntry> PasswordEntries { get; set; } = new List<PasswordEntry>();
     }
 }

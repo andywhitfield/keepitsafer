@@ -54,7 +54,7 @@ namespace KeepItSafer.Web.Tests.Models
             Assert.Equal(new byte[] { 1, 2 }, deserialized.PasswordGroups.ElementAt(0).PasswordEntries.ElementAt(1).Salt);
             
             Assert.Equal("group 2", deserialized.PasswordGroups.ElementAt(1).GroupName);
-            Assert.Equal(1, deserialized.PasswordGroups.ElementAt(1).PasswordEntries.Count);
+            Assert.Single(deserialized.PasswordGroups.ElementAt(1).PasswordEntries);
 
             Assert.Equal("entry 2.1", deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).Name);
             Assert.True(deserialized.PasswordGroups.ElementAt(1).PasswordEntries.ElementAt(0).IsValueEncrypted);

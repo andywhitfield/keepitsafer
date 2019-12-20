@@ -1,26 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using AspNet.Security.OpenId;
 using KeepItSafer.Crypto.PasswordGenerator;
 using KeepItSafer.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace KeepItSafer.Web
 {
     public class Startup
     {
-        private IHostingEnvironment hostingEnvironment;
+        private IWebHostEnvironment hostingEnvironment;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -50,6 +52,42 @@ namespace KeepItSafer.Web
                     o.Cookie.HttpOnly = true;
                     o.ExpireTimeSpan = TimeSpan.FromDays(150);
                 })
+                .AddOpenIdConnect(options =>
+                {
+                    options.ClientId = "keepitsafer";
+                    options.ClientSecret = "16bc0837-a54d-4bf1-88b7-923724ce7e63";
+
+                    options.RequireHttpsMetadata = false;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.SaveTokens = true;
+                    options.ResponseType = OpenIdConnectResponseType.Code;
+                    options.AuthenticationMethod = OpenIdConnectRedirectBehavior.RedirectGet;
+                    options.Authority = "https://smallauth.nosuchblogger.com/";
+                    options.Scope.Add("roles");
+
+                    options.SecurityTokenValidator = new JwtSecurityTokenHandler
+                    {
+                        InboundClaimTypeMap = new Dictionary<string, string>()
+                    };
+
+                    options.TokenValidationParameters.NameClaimType = "name";
+                    options.TokenValidationParameters.RoleClaimType = "role";
+
+                    options.AccessDeniedPath = "/";
+                });/*
+
+                keepitsafer:
+Display name: Keep-it-safer
+Redirect URIs: ["
+https://localhost:5001/signin-oidc
+https://keepitsafer.nosuchblogger.com/signin-oidc
+
+Post logout redirect URIs: ["
+https://localhost:5001/signout-callback-oidc
+https://keepitsafer.nosuchblogger.com/signout-callback-oidc
+
+
+
                 .AddOpenId("SmallId", "SmallId", o =>
                 {
                     o.CallbackPath = "/signin-smallid";
@@ -57,7 +95,7 @@ namespace KeepItSafer.Web
                     {
                         AuthenticationEndpoint = "https://smallid.nosuchblogger.com/openid/provider"
                     };
-                });
+                });*/
 
             services.AddLogging(logging =>
             {
@@ -73,12 +111,11 @@ namespace KeepItSafer.Web
 
             services.AddDbContext<SqliteDataContext>();
 
-            // Add framework services.
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();
+            services.AddRazorPages();
             services.AddCors();
             services.AddDistributedMemoryCache();
             services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(5));
-            services.AddSingleton<RazorTemplateEngine, KeepItSaferCompilationService>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             services.AddSingleton<WordDictionary>(serviceProvider =>
             {
@@ -89,13 +126,11 @@ namespace KeepItSafer.Web
             services.AddTransient<RandomPasswordGenerator>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
@@ -105,7 +140,11 @@ namespace KeepItSafer.Web
             app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(options => options.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}"));
         }
     }
 }

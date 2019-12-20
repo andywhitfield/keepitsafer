@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using KeepItSafer.Crypto;
-using Newtonsoft.Json;
 
 namespace KeepItSafer.Cli
 {
@@ -36,7 +36,7 @@ namespace KeepItSafer.Cli
             try
             {
                 var passwordDbContent = File.ReadAllText(passwordDb);
-                UsePasswordDb(JsonConvert.DeserializeObject<PasswordDb>(passwordDbContent));
+                UsePasswordDb(JsonSerializer.Deserialize<PasswordDb>(passwordDbContent));
             }
             catch (Exception ex)
             {

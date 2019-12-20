@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json;
 using KeepItSafer.Crypto;
 
 namespace KeepItSafer.Web.Models
@@ -11,12 +11,12 @@ namespace KeepItSafer.Web.Models
             {
                 return null;
             }
-            return JsonConvert.DeserializeObject<PasswordDb>(userAccount.PasswordDatabase);
+            return JsonSerializer.Deserialize<PasswordDb>(userAccount.PasswordDatabase);
         }
 
         public static void SetPasswordDb(this UserAccount userAccount, PasswordDb passwordDb)
         {
-            userAccount.PasswordDatabase = JsonConvert.SerializeObject(passwordDb);
+            userAccount.PasswordDatabase = JsonSerializer.Serialize(passwordDb);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace KeepItSafer.Web.Data
 
         private string GetIdentifierFromPrincipal(ClaimsPrincipal user)
         {
-            return user?.Claims?.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            return user?.FindFirstValue("sub");
         }
 
         public UserAccount GetUserAccount(ClaimsPrincipal user)
