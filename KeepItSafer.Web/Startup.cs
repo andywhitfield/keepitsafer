@@ -74,28 +74,7 @@ namespace KeepItSafer.Web
                     options.TokenValidationParameters.RoleClaimType = "role";
 
                     options.AccessDeniedPath = "/";
-                });/*
-
-                keepitsafer:
-Display name: Keep-it-safer
-Redirect URIs: ["
-https://localhost:5001/signin-oidc
-https://keepitsafer.nosuchblogger.com/signin-oidc
-
-Post logout redirect URIs: ["
-https://localhost:5001/signout-callback-oidc
-https://keepitsafer.nosuchblogger.com/signout-callback-oidc
-
-
-
-                .AddOpenId("SmallId", "SmallId", o =>
-                {
-                    o.CallbackPath = "/signin-smallid";
-                    o.Configuration = new OpenIdAuthenticationConfiguration
-                    {
-                        AuthenticationEndpoint = "https://smallid.nosuchblogger.com/openid/provider"
-                    };
-                });*/
+                });
 
             services.AddLogging(logging =>
             {
