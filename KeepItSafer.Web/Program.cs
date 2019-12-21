@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace KeepItSafer.Web
@@ -7,9 +7,7 @@ namespace KeepItSafer.Web
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
+            var host = WebHost.CreateDefaultBuilder(args)
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
