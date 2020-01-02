@@ -118,6 +118,7 @@ namespace KeepItSafer.Web
 
             app.UseStaticFiles();
             app.UseSession();
+            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();

@@ -77,3 +77,15 @@ footer { clear: both; padding-top: 10px; padding-bottom: 2px; font-size: 9pt; }
 .modal-content-header { padding-bottom: 10px; display: none; font-size: 13pt; }
 .modal-content-header[data-level="warn"] { font-weight: bold; }
 .modal-content-header[data-level="error"] { font-weight: bold; color: red; }
+
+@media (prefers-color-scheme: dark) {
+    body { background-color: black; }
+    body, li, div, span, a, td { color: white; }
+    a, a:active, a:link, a:visited, a:hover { color: white; }
+    input[type=submit], input[type=button] { background-color: lightgray; color: black; }
+
+    .password-list li { background-color: #333; }
+
+    #modal-background { background-color: #222; }
+    #modal-content { background-color: #111; }    
+}
