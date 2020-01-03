@@ -50,14 +50,15 @@ namespace KeepItSafer.Web
                     o.LoginPath = "/signin";
                     o.LogoutPath = "/signout";
                     o.Cookie.HttpOnly = true;
+                    o.Cookie.MaxAge = TimeSpan.FromDays(150);
                     o.ExpireTimeSpan = TimeSpan.FromDays(150);
+                    o.SlidingExpiration = true;
                 })
                 .AddOpenIdConnect(options =>
                 {
                     options.ClientId = "keepitsafer";
                     options.ClientSecret = "16bc0837-a54d-4bf1-88b7-923724ce7e63";
 
-                    options.RequireHttpsMetadata = false;
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.SaveTokens = true;
                     options.ResponseType = OpenIdConnectResponseType.Code;
@@ -117,8 +118,8 @@ namespace KeepItSafer.Web
             }
 
             app.UseStaticFiles();
-            app.UseSession();
             app.UseCookiePolicy();
+            app.UseSession();
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
