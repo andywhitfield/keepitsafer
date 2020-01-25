@@ -6,11 +6,13 @@ namespace KeepItSafer.Web.Models.Views
 {
     public class PasswordDbViewModel
     {
-        public PasswordDbViewModel(PasswordDb db)
+        public PasswordDbViewModel(PasswordDb db, string dropboxToken)
         {
             Groups = db.PasswordGroups.Select(pg => new GroupViewModel(pg)).OrderBy(pg => pg.Name);
+            HasDropboxToken = !string.IsNullOrEmpty(dropboxToken);
         }
 
         public IEnumerable<GroupViewModel> Groups { get; }
+        public bool HasDropboxToken { get; }
     }
 }

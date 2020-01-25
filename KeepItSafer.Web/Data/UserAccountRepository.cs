@@ -1,27 +1,35 @@
 using System;
-using System.Linq;
+using System.IO;
 using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Dropbox.Api;
+using Dropbox.Api.Files;
 using KeepItSafer.Crypto;
 using KeepItSafer.Web.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace KeepItSafer.Web.Data
 {
     public class UserAccountRepository : IUserAccountRepository
     {
         private readonly SqliteDataContext context;
+        private readonly ILogger<UserAccountRepository> logger;
 
-        public UserAccountRepository(SqliteDataContext context)
+        public UserAccountRepository(SqliteDataContext context, ILogger<UserAccountRepository> logger)
         {
             this.context = context;
+            this.logger = logger;
         }
 
-        public bool HasMasterPassword(ClaimsPrincipal user)
+        public async Task<bool> HasMasterPasswordAsync(ClaimsPrincipal user)
         {
-            return TryGetAccount(user, out var userAccount) &&
-                !string.IsNullOrWhiteSpace(userAccount.PasswordDatabase);
+            var userAccount = await GetUserAccountOrNullAsync(user);
+            return userAccount != null && !string.IsNullOrWhiteSpace(userAccount.PasswordDatabase);
         }
 
-        public void CreateNewUser(ClaimsPrincipal user, string masterPassword)
+        public Task CreateNewUserAsync(ClaimsPrincipal user, string masterPassword)
         {
             var authenticationUri = GetIdentifierFromPrincipal(user);
             var newAccount = new UserAccount { AuthenticationUri = authenticationUri };
@@ -34,7 +42,7 @@ namespace KeepItSafer.Web.Data
             }
 
             context.UserAccounts.Add(newAccount);
-            context.SaveChanges();
+            return context.SaveChangesAsync();
         }
 
         private string GetIdentifierFromPrincipal(ClaimsPrincipal user)
@@ -42,28 +50,35 @@ namespace KeepItSafer.Web.Data
             return user?.FindFirstValue("sub");
         }
 
-        public UserAccount GetUserAccount(ClaimsPrincipal user)
+        public Task<UserAccount> GetUserAccountAsync(ClaimsPrincipal user)
         {
-            return TryGetAccount(user, out var account) ? account : throw new ArgumentException($"No UserAccount for the user: {user}");
+            return GetUserAccountOrNullAsync(user) ?? throw new ArgumentException($"No UserAccount for the user: {user}");
         }
 
-        private bool TryGetAccount(ClaimsPrincipal user, out UserAccount userAccount)
+        private Task<UserAccount> GetUserAccountOrNullAsync(ClaimsPrincipal user)
         {
             var authenticationUri = GetIdentifierFromPrincipal(user);
             if (string.IsNullOrWhiteSpace(authenticationUri))
-            {
-                userAccount = default(UserAccount);
-                return false;
-            }
+                return null;
 
-            userAccount = context.UserAccounts.FirstOrDefault(ua => ua.AuthenticationUri == authenticationUri);
-            return userAccount != null;
+            return context.UserAccounts.FirstOrDefaultAsync(ua => ua.AuthenticationUri == authenticationUri);
         }
 
-        public void SaveUserAccount(UserAccount userAccount)
+        public async Task SaveUserAccountAsync(UserAccount userAccount)
         {
             context.UserAccounts.Update(userAccount);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+
+            if (string.IsNullOrEmpty(userAccount.DropboxToken))
+                return;
+
+            using var contentStream = new MemoryStream(Encoding.ASCII.GetBytes(userAccount.PasswordDatabase));
+            using var dropboxClient = new DropboxClient(userAccount.DropboxToken);
+            var file = await dropboxClient.Files.UploadAsync(
+                "/keepitsafer.db.json",
+                WriteMode.Overwrite.Instance,
+                body: contentStream);
+            logger.LogTrace($"Saved {file.PathDisplay}/{file.Name} rev {file.Rev}");
         }
     }
 }

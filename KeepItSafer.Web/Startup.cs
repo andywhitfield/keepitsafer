@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -81,6 +82,7 @@ namespace KeepItSafer.Web
             {
                 logging.AddConsole();
                 logging.AddDebug();
+                logging.SetMinimumLevel(LogLevel.Trace);
             });
 
             services.Configure<CookiePolicyOptions>(o =>
@@ -126,6 +128,9 @@ namespace KeepItSafer.Web
             app.UseEndpoints(options => options.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}"));
+
+            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            scope.ServiceProvider.GetRequiredService<SqliteDataContext>().Database.Migrate();
         }
     }
 }

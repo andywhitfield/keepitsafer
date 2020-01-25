@@ -102,6 +102,13 @@
 <div>
 <a href="@Url.Content("~/download")">Download Password Database</a>
 </div>
+<div>
+@if (Model.HasDropboxToken) {
+    <a href="@Url.Content("~/dropbox-disconnect")">Unlink Dropbox Account</a>
+} else {
+    <a href="@Url.Content("~/dropbox-connect")">Link Dropbox Account</a>
+}
+</div>
 </section>
 
 <div id="modal-background"></div>

@@ -1,4 +1,5 @@
-﻿using KeepItSafer.Web.Data;
+﻿using System.Threading.Tasks;
+using KeepItSafer.Web.Data;
 using KeepItSafer.Web.Models;
 using KeepItSafer.Web.Models.Views;
 using Microsoft.AspNetCore.Authorization;
@@ -16,14 +17,15 @@ namespace KeepItSafer.Web.Controllers
         }
         
         [Authorize]
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            if (!userAccountRepository.HasMasterPassword(User))
+            if (!await userAccountRepository.HasMasterPasswordAsync(User))
             {
                 return Redirect("~/newuser");
             }
 
-            return View(new PasswordDbViewModel(userAccountRepository.GetUserAccount(User).GetPasswordDb()));
+            var userAccount = await userAccountRepository.GetUserAccountAsync(User);
+            return base.View(new PasswordDbViewModel(userAccount.GetPasswordDb(), userAccount.DropboxToken));
         }
 
         public IActionResult Error() => View();

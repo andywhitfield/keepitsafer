@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 using KeepItSafer.Web.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,9 @@ namespace KeepItSafer.Web.Controllers
         }
         
         [Authorize]
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var passwordDb = userAccountRepository.GetUserAccount(User).PasswordDatabase;
+            var passwordDb = (await userAccountRepository.GetUserAccountAsync(User)).PasswordDatabase;
             return File(Encoding.ASCII.GetBytes(passwordDb), "text/plain", "passworddb.txt");
         }
     }

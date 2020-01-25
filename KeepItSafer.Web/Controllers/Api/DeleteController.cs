@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using KeepItSafer.Crypto;
 using KeepItSafer.Web.Data;
 using KeepItSafer.Web.Models;
@@ -23,7 +24,7 @@ namespace KeepItSafer.Web.Controllers.Api
 
         [HttpPost]
         [Authorize]
-        public IActionResult Delete([FromForm] EncryptDecryptInfo info)
+        public async Task<ActionResult> Delete([FromForm] EncryptDecryptInfo info)
         {
             logger.LogDebug("Received delete info: {0}", info);
             if (!ModelState.IsValid)
@@ -56,7 +57,7 @@ namespace KeepItSafer.Web.Controllers.Api
                 });
             }
 
-            var userAccount = userAccountRepository.GetUserAccount(User);
+            var userAccount = await userAccountRepository.GetUserAccountAsync(User);
             var passwordDb = userAccount.GetPasswordDb();
 
             using (var secure = new Secure())
@@ -100,7 +101,7 @@ namespace KeepItSafer.Web.Controllers.Api
             }
             
             userAccount.SetPasswordDb(passwordDb);
-            userAccountRepository.SaveUserAccount(userAccount);
+            await userAccountRepository.SaveUserAccountAsync(userAccount);
 
             return new ObjectResult(new {
                 Deleted = true,

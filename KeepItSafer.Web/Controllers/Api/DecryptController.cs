@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using KeepItSafer.Crypto;
 using KeepItSafer.Web.Data;
 using KeepItSafer.Web.Models;
@@ -23,7 +24,7 @@ namespace KeepItSafer.Web.Controllers.Api
 
         [HttpPost]
         [Authorize]
-        public IActionResult Decrypt([FromForm] EncryptDecryptInfo info)
+        public async Task<ActionResult> Decrypt([FromForm] EncryptDecryptInfo info)
         {
             logger.LogDebug("Received decrypt info: {0}", info);
             if (!ModelState.IsValid)
@@ -58,7 +59,7 @@ namespace KeepItSafer.Web.Controllers.Api
 
             using (var secure = new Secure())
             {
-                var userAccount = userAccountRepository.GetUserAccount(User);
+                var userAccount = await userAccountRepository.GetUserAccountAsync(User);
                 var passwordDb = userAccount.GetPasswordDb();
 
                 if (!secure.ValidateHash(masterPassword, passwordDb.MasterPassword))

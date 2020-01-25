@@ -5,5 +5,6 @@ namespace KeepItSafer.Web.Models
         public int UserAccountId { get; set; }
         public string AuthenticationUri { get; set; }
         public string PasswordDatabase { get; set; }
+        public string DropboxToken { get; set; }
     }
 }
