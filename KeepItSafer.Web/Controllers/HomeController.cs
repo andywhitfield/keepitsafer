@@ -28,6 +28,15 @@ namespace KeepItSafer.Web.Controllers
             return base.View(new PasswordDbViewModel(userAccount.GetPasswordDb(), userAccount.DropboxToken));
         }
 
+        public async Task<ActionResult> Index2()
+        {
+            if (!await userAccountRepository.HasMasterPasswordAsync(User))
+                return Redirect("~/newuser");
+
+            var userAccount = await userAccountRepository.GetUserAccountAsync(User);
+            return base.View(new PasswordDbViewModel(userAccount.GetPasswordDb(), userAccount.DropboxToken));
+        }
+
         public IActionResult Error() => View();
     }
 }

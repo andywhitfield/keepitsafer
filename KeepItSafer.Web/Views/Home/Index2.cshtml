@@ -1,0 +1,160 @@
+﻿@model KeepItSafer.Web.Models.Views.PasswordDbViewModel
+@{
+    Layout = "_Layout2";
+}
+
+<section class="groups">
+@if (!Model.Groups.Any())
+{
+    <div>No saved entries.</div>
+    <div>Enter new passwords using the form below.</div>
+}
+
+@foreach (var group in Model.Groups)
+{
+    <div data-group="@group.Name">@group.Name</div>
+}
+</section>
+
+@foreach (var group in Model.Groups)
+{
+<section class="group-entries" data-group="@group.Name">
+    <div>
+        <span>@group.Name</span>
+        <span class="group-entry-actions"><a>back</a></span>
+    </div>
+    @foreach (var entry in group.Entries)
+    {
+    <div data-name="@entry.Name">
+        <span class="group-entry-name"><input type="button" value="Copy" data-copy="name" /> @entry.Name</span>
+        <span class="group-entry-actions">
+            @if (entry.IsValueEncrypted) {
+            <span class="group-entry-copy"><input type="button" value="Copy" data-copy="encrypted" /></span>
+            <span class="group-entry-password"><input type="text" value="***" data-type="encrypted" title="Click to decrypt" /></span>
+            } else {
+            <span class="group-entry-copy"><input type="button" value="Copy" data-copy="value" /></span>
+            <span class="group-entry-password"><input type="text" value="@entry.Value" /></span>
+            }
+            <span class="group-entry-delete"><input type="button" value="Delete" /></span>
+        </span>
+    </div>
+    }
+</section>
+}
+
+<section id="AddNewEntry">
+    <form id="addnewentryform">
+
+    <fieldset>
+    <legend>Add New / Update Entry</legend>
+    <div>
+        <label for="addnewentrygroup">Group:</label>
+        <input type="text" id="addnewentrygroup" name="addnewentrygroup" />
+    </div>
+    
+    <div>
+        <label for="addnewentryname">Name:</label>
+        <input type="text" id="addnewentryname" name="addnewentryname" />
+    </div>
+    
+    <div>
+        <label for="addnewentryvalueencrypted">Value Encrypted:</label>
+        <input type="checkbox" id="addnewentryvalueencrypted" name="addnewentryvalueencrypted" value="true" />
+    </div>
+    
+    <div>
+        <label for="addnewentryvalue">Value:</label>
+        <input type="text" id="addnewentryvalue" name="addnewentryvalue" />
+    </div>
+
+    <div>
+        <input type="submit" value="Add / Update" />
+    </div>
+    </fieldset>
+
+    </form>
+</section>
+
+<section id="PasswordGenerator">
+    <form id="passwordgeneratorform">
+
+    <fieldset>
+    <legend>Generate a Password</legend>
+    <div>
+        <label for="genpassminpasswordlength">Min password length:</label>
+        <input type="number" min="4" step="1" id="genpassminpasswordlength" name="genpassminpasswordlength" value="10" />
+    </div>
+    
+    <div>
+        <label for="genpassmaxpasswordlength">Max password length:</label>
+        <input type="number" min="0" step="1" id="genpassmaxpasswordlength" name="genpassmaxpasswordlength" value="0" />
+    </div>
+
+    <div>
+        <label for="genpassspecialchars">Allow special characters:</label>
+        <input type="checkbox" id="genpassspecialchars" name="genpassspecialchars" value="true" checked="checked" />
+    </div>
+        
+    <div>
+        <label for="genpassnumbers">Allow numbers:</label>
+        <input type="checkbox" id="genpassnumbers" name="genpassnumbers" value="true" checked="checked" />
+    </div>
+        
+    <div>
+        <input type="submit" value="Generate" />
+    </div>
+
+    <div id="genpassoutput"></div>
+    </fieldset>
+
+    </form>
+</section>
+
+<section class="end-section">
+<div>
+<a href="@Url.Content("~/download")">Download Password Database</a>
+</div>
+<div>
+@if (Model.HasDropboxToken) {
+    <a href="@Url.Content("~/dropbox-disconnect")">Unlink Dropbox Account</a>
+} else {
+    <a href="@Url.Content("~/dropbox-connect")">Link Dropbox Account</a>
+}
+</div>
+</section>
+
+<div id="modal-background"></div>
+<div id="modal-content">
+    <div><input id="modal-close" type="button" value="Close" /></div>
+    <form id="masterpasswordentryform">
+    <div class="modal-content-header"></div>
+
+    <fieldset>
+    <div>
+        <label for="masterpassword">Master Password:</label>
+        <input type="password" id="masterpassword" name="masterpassword" />
+    </div>
+    
+    <div>
+        <label for="remembermasterpassword">Remember for the session:</label>
+        <input type="checkbox" id="remembermasterpassword" name="remembermasterpassword" value="true" />
+    </div>
+    </fieldset>
+
+    <div>
+    <input type="submit" value="OK" />
+    <input type="button" value="Cancel" />
+    <input type="hidden" name="action" />
+    <input type="hidden" name="group" />
+    <input type="hidden" name="entry" />
+    <input type="hidden" name="value" />
+    <input type="hidden" name="valueEncrypted" />
+    </div>
+    </form>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(function() { initialise() })
+</script>
+}
