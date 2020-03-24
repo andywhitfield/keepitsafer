@@ -89,6 +89,7 @@ nav { clear: both; margin: 5px 5px 5px 0px }
 #passwordgeneratorform input[type="submit"] { margin-left: 190px; }
 #genpassoutput input { width: 245px; }
 
+.error { font-weight: bold; color: red; margin-bottom: 10px; }
 .end-section { clear: both; padding-top: 20px; }
 footer { color: white; }
 

@@ -7,11 +7,22 @@ function initialise() {
     $('.groups div').click(function() { showGroup($(this).attr('data-group')) })
     $('.group-entries div:first-child a').click(function() { showAllGroups() })
     $('.group-entry-password input[data-type="encrypted"]').click(function() { decryptPassword($(this)) })
+    $('.group-entry-delete input').click(function() { deleteEntry($(this)) })
     $('.group-entries div:first-child').click(function() { hideDecryptedPasswords() })
     $('input[data-copy]').click(function() { copyPasswordToClipboard($(this)) })
     $("#modal-background, #modal-close, #modal-content input[value='Cancel']").click(function () { closeModalDialog() })
     $('#masterpasswordentryform').submit(handleMasterPasswordEntered)
     $(document).keydown(function(e) { if (e.keyCode === 27) closeModalDialog() })
+
+    $('#addnewentryvalueencrypted').change(function() {
+        $('#addnewentryvalue').attr('type', $(this).is(':checked') ? 'password' : 'text')
+    })
+    $('#addnewentryform').submit(handleAddNewEntry)
+    $('#addnewentryform input[type="text"]').keyup(setAddNewEntryEnabledState)
+    $('#addnewentryform input[type="text"]').change(setAddNewEntryEnabledState)
+    setAddNewEntryEnabledState()
+
+    $('#passwordgeneratorform').submit(handleGeneratePassword)
 }
 function showAllGroups() {
     console.log('showing all groups')
@@ -58,25 +69,25 @@ function copyPasswordToClipboard(entry) {
     }
 }
 function handleMasterPasswordEntered(event) {
-    var frm = $('#masterpasswordentryform')
-    var onDecrypt = $('input[name=ondecrypt]', frm).val()
-    var action = $('input[name=action]', frm).val()
-    var groupEntryId = $('input[name=group]', frm).val()
-    var passwordEntryId = $('input[name=entry]', frm).val()
-    var value = $('input[name=value]', frm).val()
-    var valueEncrypted = $('input[name=valueEncrypted]', frm).val()
-    var masterPasswordField = $('input[name=masterpassword]', frm)
-    var rememberMasterPassword = $('input:checked[name=remembermasterpassword]', frm).val()
-    var masterPassword = masterPasswordField.val()
+    let frm = $('#masterpasswordentryform')
+    let onDecrypt = $('input[name=ondecrypt]', frm).val()
+    let action = $('input[name=action]', frm).val()
+    let groupEntryId = $('input[name=group]', frm).val()
+    let passwordEntryId = $('input[name=entry]', frm).val()
+    let value = $('input[name=value]', frm).val()
+    let valueEncrypted = $('input[name=valueEncrypted]', frm).val()
+    let masterPasswordField = $('input[name=masterpassword]', frm)
+    let rememberMasterPassword = $('input:checked[name=remembermasterpassword]', frm).val()
+    let masterPassword = masterPasswordField.val()
     masterPasswordField.val('')
 
     console.log('re-submit request with form details: group=' + groupEntryId + ';entry=' + passwordEntryId + ';value=' + value + ';valueEncrypted=' + valueEncrypted + ';masterpw=' + masterPassword + ';rememberMasterPassword=' + rememberMasterPassword)
     if (action == 'decrypt') {
         decrypt(groupEntryId, passwordEntryId, onDecrypt, masterPassword, rememberMasterPassword)
-    //} else if (action == 'delete') {
-    //    callDeleteEntry(groupEntryId, passwordEntryId, masterPassword, rememberMasterPassword)
-    //} else if (action == 'add') {
-    //    addNewEntry(groupEntryId, passwordEntryId, valueEncrypted, value, masterPassword, rememberMasterPassword)
+    } else if (action == 'delete') {
+        callDeleteEntry(groupEntryId, passwordEntryId, masterPassword, rememberMasterPassword)
+    } else if (action == 'add') {
+        addNewEntry(groupEntryId, passwordEntryId, valueEncrypted, value, masterPassword, rememberMasterPassword)
     }
     closeModalDialog()
 
@@ -96,20 +107,20 @@ function decrypt(groupEntryId, passwordEntryId, onDecrypt, masterPassword, remem
             groupEntryId = groupEntryId.replace(new RegExp('\'', 'g'), '\\\'')
             passwordEntryId = passwordEntryId.replace(new RegExp('\'', 'g'), '\\\'')
             if (onDecrypt === 'copy') {
-                var copyButton = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-copy='encrypted']")
+                let copyButton = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-copy='encrypted']")
                 copyButton.attr('data-state', 'decrypted')
                 copyButton.attr('data-decrypted', data.decryptedValue)
                 copyButton.val('Copy')
                 return
             }
-            var passwordTextbox = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-type='encrypted']")
+            let passwordTextbox = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-type='encrypted']")
             passwordTextbox.val(data.decryptedValue)
             passwordTextbox.attr('data-state', 'decrypted')
             passwordTextbox.select()
             return
         }
 
-        var frm = $('#masterpasswordentryform')
+        let frm = $('#masterpasswordentryform')
         $('input[name=ondecrypt]', frm).val(onDecrypt)
         $('input[name=action]', frm).val('decrypt')
         $('input[name=group]', frm).val(groupEntryId)
@@ -177,7 +188,7 @@ function closeModalDialog() {
 }
 function showModalDialog(headerMessage, level) {
     closeModalDialog()
-    var header = $('#modal-content .modal-content-header')
+    let header = $('#modal-content .modal-content-header')
     if ((headerMessage || '') === '') {
         header.hide()
     } else {
@@ -189,6 +200,169 @@ function showModalDialog(headerMessage, level) {
 
     $('#modal-content, #modal-background').addClass('active')
     $('#masterpassword').focus()
+}
+function deleteEntry(deleteBtn) {
+    let entryName = deleteBtn.parents('div[data-name]').attr('data-name')
+    let groupName = deleteBtn.parents('section[data-group]').attr('data-group')
+
+    console.log('delete button clicked: ' + entryName + ' in group ' + groupName)
+    if (!confirm('Are you sure you want to delete "' + entryName + '"?')) {
+        return
+    }
+    callDeleteEntry(groupName, entryName)
+}
+function callDeleteEntry(groupEntryId, passwordEntryId, masterPassword, rememberMasterPassword) {
+    $.post('/api/delete', {
+        group: groupEntryId,
+        entry: passwordEntryId,
+        masterPassword: masterPassword || '',
+        rememberMasterPassword: rememberMasterPassword || 'false'
+    })
+     .done(function(data) {
+        console.log('received delete result: ' + data.deleted + ':' + data.reason)
+        if (data.deleted) {
+            location.reload(true)
+            return
+        }
+
+        let frm = $('#masterpasswordentryform')
+        $('input[name=action]', frm).val('delete')
+        $('input[name=group]', frm).val(groupEntryId)
+        $('input[name=entry]', frm).val(passwordEntryId)
+        $(':password', frm).val('')
+        var headerMessage = ''
+        var level = 'info'
+        if (data.reason == 0) { // need to enter master password
+            headerMessage = 'Please enter your master password.'
+        } else if (data.reason == 1) { // incorrect master password
+            headerMessage = 'Incorrect master password, please try again.'
+            level = 'warn'
+        } else { // some unknown error
+            headerMessage = 'Unknown error deleting this entry. Try entering your master password again.'
+            level = 'error'
+        }
+        showModalDialog(headerMessage, level)
+        $(':password', frm).focus()
+     })
+     .fail(function() {
+         console.log('delete api call failed')
+     })
+}
+function allowAddNewEntry() {
+    var allHaveValues = true
+    $('#addnewentryform input[type="text"], #addnewentryform input[type="password"]').each(function(i) {
+        allHaveValues = allHaveValues && $(this).val() != ''
+    })
+    return allHaveValues
+}
+function setAddNewEntryEnabledState() {
+    if (allowAddNewEntry()) {
+        $('#addnewentryform :submit').removeAttr("disabled")
+    } else {
+        $('#addnewentryform :submit').attr("disabled", "disabled")
+    }
+}
+function handleAddNewEntry(event) {
+    if (allowAddNewEntry()) {
+        let frm = $('#addnewentryform')
+        let group = $('input[name=addnewentrygroup]', frm).val()
+        let entry = $('input[name=addnewentryname]', frm).val()
+        let valueEncrypted = $('input:checked[name=addnewentryvalueencrypted]', frm).val() || 'false'
+        let value = $('input[name=addnewentryvalue]', frm).val()
+
+        console.log('submit add request with form details: group=' + group + ';entry=' + entry + ';valueEncrypted=' + valueEncrypted + ';value=' + value)
+        addNewEntry(group, entry, valueEncrypted, value)
+    }
+
+    event.preventDefault()
+    return false
+}
+function addNewEntry(group, entry, valueEncrypted, value, masterPassword, rememberMasterPassword) {
+    $.post('/api/add', {
+        group: group,
+        entry: entry,
+        valueEncrypted: valueEncrypted,
+        value: value,
+        masterPassword: masterPassword || '',
+        rememberMasterPassword: rememberMasterPassword || 'false'
+    })
+     .done(function(data) {
+        console.log('received add result: ' + data.added + ':' + data.reason)
+        if (data.added) {
+            location.reload(true)
+            return
+        }
+
+        let frm = $('#masterpasswordentryform')
+        $('input[name=action]', frm).val('add')
+        $('input[name=group]', frm).val(group)
+        $('input[name=entry]', frm).val(entry)
+        $('input[name=value]', frm).val(value)
+        $('input[name=valueEncrypted]', frm).val(valueEncrypted)
+        $(':password', frm).val('')
+        var headerMessage = ''
+        var level = 'info'
+        if (data.reason == 0) { // need to enter master password
+            headerMessage = 'Please enter your master password.'
+        } else if (data.reason == 1) { // incorrect master password
+            headerMessage = 'Incorrect master password, please try again.'
+            level = 'warn'
+        } else { // some unknown error
+            headerMessage = 'Unknown error adding this entry. Try entering your master password again.'
+            level = 'error'
+        }
+        showModalDialog(headerMessage, level);
+        $(':password', frm).focus()
+     })
+     .fail(function() {
+         console.log('add api call failed')
+     })
+}
+function handleGeneratePassword(event) {
+    let frm = $('#passwordgeneratorform')
+
+    let minLength = $('input[name=genpassminpasswordlength]', frm).val()
+    let maxLength = $('input[name=genpassmaxpasswordlength]', frm).val()
+    let allowSpecialChars = $('input:checked[name=genpassspecialchars]', frm).val() || 'false'
+    let allowNumbers = $('input:checked[name=genpassnumbers]', frm).val() || 'false'
+
+    console.log('generate passwords given min=' + minLength + ';max=' + maxLength + ';special=' + allowSpecialChars + ';numbers=' + allowNumbers)
+
+    $.post('/api/genpasswords', {
+        minLength: minLength,
+        maxLength: maxLength,
+        allowSpecialCharacters: allowSpecialChars,
+        allowNumbers: allowNumbers
+    })
+     .done(function(data) {
+        console.log('received generate passwords result: ' + data.passwords)
+        let passwordDiv = $('#genpassoutput')
+        passwordDiv.empty()
+
+        if (data.passwords.length == 0) {
+            passwordDiv.text('Word dictionary loading...please try again in a few moments.')
+            return
+        }
+
+        $.each(data.passwords, function(k, v) {
+            let newInput = $('<input />').attr('type', 'text').val(v)
+            passwordDiv.append(newInput).append('<br />')
+        });
+        $('input', passwordDiv).mousedown(function(e) {
+            e.stopPropagation()
+            if ($(this).is(':focus')) { return }
+            let inputEl = $(this)[0]
+            window.setTimeout(function() {
+                inputEl.setSelectionRange(0, 9999)
+            }, 10)
+        })
+     })
+     .fail(function() {
+        console.log('generate password api call failed')
+     })
+
+    event.preventDefault()
+    return false
 }
 
 /* notification window */
