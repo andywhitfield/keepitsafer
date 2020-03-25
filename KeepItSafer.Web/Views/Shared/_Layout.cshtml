@@ -7,10 +7,10 @@
     <title>KeepItSafer</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/keepitsafer.css" />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/keepitsafer.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
@@ -35,17 +35,15 @@
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/simpleStorage/simpleStorage.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/keepitsafer.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.2.1.min.js"
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.4.1.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
                 crossorigin="anonymous">
         </script>
-        <script src="~/lib/simpleStorage/simpleStorage.min.js"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/keepitsafer.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

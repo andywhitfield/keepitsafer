@@ -1,16 +1,16 @@
 body {
     background-color: white;
 }
-body, li, div, span, a, td, form, button, input, textarea, label, legend {
+body, p, li, div, span, a, td, form, button, input, textarea, label, legend {
     font-family: sans-serif;
     font-size: 11pt;
 }
 a, a:link, a:visited, a:any-link{
-    color: white;
+    color: black;
     text-decoration: underline;
 }
 a:hover, a:active {
-    color: khaki;
+    color: darkkhaki;
     text-decoration: none;
 }
 
@@ -77,12 +77,12 @@ nav { clear: both; margin: 5px 5px 5px 0px }
     opacity: 0.8;
 }
 
-#addnewentryform { margin: 20px 20px 0px 0px; float: left; color: white; }
+#addnewentryform { margin: 20px 20px 0px 0px; float: left; }
 #addnewentryform legend { color: #408732; }
 #addnewentryform label { width: 115px; display: inline-block; }
 #addnewentryform input[type="submit"] { margin-left: 120px; }
 
-#passwordgeneratorform { margin-top: 20px; float: left; color: white; }
+#passwordgeneratorform { margin-top: 20px; float: left; }
 #passwordgeneratorform legend { color: #408732; }
 #passwordgeneratorform label { width: 185px; display: inline-block; }
 #passwordgeneratorform input[type="number"] { width: 40px; }
@@ -91,7 +91,6 @@ nav { clear: both; margin: 5px 5px 5px 0px }
 
 .error { font-weight: bold; color: red; margin-bottom: 10px; }
 .end-section { clear: both; padding-top: 20px; }
-footer { color: white; }
 
 /* modal window styles */
 #modal-background {
@@ -137,6 +136,16 @@ footer { color: white; }
 
 @media (prefers-color-scheme: dark) {
     body { background-color: black; }
+    a, a:link, a:visited, a:any-link{
+        color: white;
+    }
+    a:hover, a:active {
+        color: khaki;
+    }
+    section.signin h1, section.signin p { color: white; }
+    footer { color: white; }
+    #addnewentryform { color: white; }
+    #passwordgeneratorform { color: white; }
     #modal-background { background-color: #222; }
     #modal-content { background-color: #111; color: white; }
 }
