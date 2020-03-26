@@ -106,12 +106,12 @@ function decrypt(groupEntryId, passwordEntryId, onDecrypt, masterPassword, remem
         if (data.decrypted) {
             groupEntryId = groupEntryId.replace(new RegExp('\'', 'g'), '\\\'')
             passwordEntryId = passwordEntryId.replace(new RegExp('\'', 'g'), '\\\'')
+            let copyButton = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-copy='encrypted']")
+            copyButton.attr('data-state', 'decrypted')
+            copyButton.attr('data-decrypted', data.decryptedValue)
+            copyButton.val('Copy')
             if (onDecrypt === 'copy') {
-                let copyButton = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-copy='encrypted']")
-                copyButton.attr('data-state', 'decrypted')
-                copyButton.attr('data-decrypted', data.decryptedValue)
-                copyButton.val('Copy')
-                return
+                    return
             }
             let passwordTextbox = $("section.group-entries[data-group='" + groupEntryId + "'] div[data-name='" + passwordEntryId + "'] input[data-type='encrypted']")
             passwordTextbox.val(data.decryptedValue)
