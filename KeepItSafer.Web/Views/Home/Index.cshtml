@@ -1,12 +1,14 @@
 ﻿@model KeepItSafer.Web.Models.Views.PasswordDbViewModel
 
-<section class="groups">
 @if (!Model.Groups.Any())
 {
     <div>No saved entries.</div>
     <div>Enter new passwords using the form below.</div>
+} else {
+    <div><input type="text" name="groupsfilter" /></div>
 }
 
+<section class="groups">
 @foreach (var group in Model.Groups)
 {
     <div data-group="@group.Name">@group.Name</div>

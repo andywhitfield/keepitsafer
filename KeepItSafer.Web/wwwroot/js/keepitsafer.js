@@ -11,8 +11,9 @@ function initialise() {
     $('.group-entries div:first-child').click(function() { hideDecryptedPasswords() })
     $('input[data-copy]').click(function() { copyPasswordToClipboard($(this)) })
     $("#modal-background, #modal-close, #modal-content input[value='Cancel']").click(function () { closeModalDialog() })
-    $('#masterpasswordentryform').submit(handleMasterPasswordEntered)
-    $(document).keydown(function(e) { if (e.keyCode === 27) closeModalDialog() })
+    $('#masterpasswordentryform').submit(handleMasterPasswordEntered)    
+    $('input[name="groupsfilter"]').hide().on('input', handleGroupFilter);
+    $(document).keydown(handleDocumentKeyDown)
 
     $('#addnewentryvalueencrypted').change(function() {
         $('#addnewentryvalue').attr('type', $(this).is(':checked') ? 'password' : 'text')
@@ -23,6 +24,35 @@ function initialise() {
     setAddNewEntryEnabledState()
 
     $('#passwordgeneratorform').submit(handleGeneratePassword)
+}
+function handleDocumentKeyDown(e) {
+    switch (e.keyCode) {
+        case 27: // escape
+            closeModalDialog()
+            if ($('input[name="groupsfilter"]').is(':focus'))
+                closeGroupFilter()
+            break;
+        case 81:
+        case 113:
+        case 70:
+        case 102:
+        case 83:
+        case 115:
+            // show quick find on 'q', 's', or 'f' (upper & lower case)
+            if ($('section.groups').is(':visible') && !$('input[name="groupsfilter"]').is(':visible')) {
+                closeGroupFilter()
+                $('input[name="groupsfilter"]').show().focus().select()
+                e.preventDefault()
+            }
+            break;
+        case 13: // return/enter
+            let visibleGroups = $('section.groups div[data-group]:visible')
+            if ($('input[name="groupsfilter"]').is(':focus') && visibleGroups.length === 1) {
+                // if only one group is displayed, let's open that group
+                showGroup(visibleGroups.attr('data-group'))
+                e.preventDefault()
+            }
+    }
 }
 function showAllGroups() {
     console.log('showing all groups')
@@ -35,7 +65,21 @@ function showGroup(group) {
     hideDecryptedPasswords()
     $('section.group-entries[data-group="' + group + '"]').show()
     $('section.groups').hide()
+    closeGroupFilter()
     window.scrollTo(0, 0)
+}
+function closeGroupFilter() {
+    $('input[name="groupsfilter"]').val('').hide()
+    handleGroupFilter()
+}
+function handleGroupFilter() {
+    let filter = $('input[name="groupsfilter"]').val()
+    if (filter === '') {
+        $('section.groups div[data-group]').show()
+    } else {
+        $('section.groups div[data-group]').hide()
+        $('section.groups div[data-group*="' + filter + '" i]').show()
+    }
 }
 function decryptPassword(entry) {
     console.log('showing password')
