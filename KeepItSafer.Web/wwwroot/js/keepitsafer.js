@@ -39,7 +39,7 @@ function handleDocumentKeyDown(e) {
         case 83:
         case 115:
             // show quick find on 'q', 's', or 'f' (upper & lower case)
-            if ($('section.groups').is(':visible') && !$('input[name="groupsfilter"]').is(':visible')) {
+            if (document.activeElement != null && document.activeElement.tagName.toLowerCase() !== 'input' && $('section.groups').is(':visible') && !$('input[name="groupsfilter"]').is(':visible')) {
                 closeGroupFilter()
                 $('input[name="groupsfilter"]').show().focus().select()
                 e.preventDefault()
