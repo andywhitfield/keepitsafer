@@ -1,5 +1,6 @@
 ﻿@model KeepItSafer.Web.Models.Views.PasswordDbViewModel
 
+<main>
 @if (!Model.Groups.Any())
 {
     <div>No saved entries.</div>
@@ -122,36 +123,36 @@
 </div>
 </section>
 
-<div id="modal-background"></div>
-<div id="modal-content">
-    <div><input id="modal-close" type="button" value="Close" /></div>
-    <form id="masterpasswordentryform">
-    <div class="modal-content-header"></div>
+</main>
 
+<aside id="MasterPasswordEntry">
+    <form id="masterpasswordentryform">
     <fieldset>
+    <legend></legend>
+
     <div>
         <label for="masterpassword">Master Password:</label>
-        <input type="password" id="masterpassword" name="masterpassword" />
+        <input type="password" id="masterpassword" name="masterpassword" autocomplete="off" autofocus />
     </div>
-    
     <div>
         <label for="remembermasterpassword">Remember for the session:</label>
         <input type="checkbox" id="remembermasterpassword" name="remembermasterpassword" value="true" />
     </div>
-    </fieldset>
-
+        
     <div>
-    <input type="submit" value="OK" />
-    <input type="button" value="Cancel" />
-    <input type="hidden" name="ondecrypt" />
-    <input type="hidden" name="action" />
-    <input type="hidden" name="group" />
-    <input type="hidden" name="entry" />
-    <input type="hidden" name="value" />
-    <input type="hidden" name="valueEncrypted" />
+        <input type="submit" value="OK" />
+        <input type="button" value="Cancel" />
+        <input type="hidden" name="ondecrypt" />
+        <input type="hidden" name="action" />
+        <input type="hidden" name="group" />
+        <input type="hidden" name="entry" />
+        <input type="hidden" name="value" />
+        <input type="hidden" name="valueEncrypted" />
     </div>
+
+    </fieldset>
     </form>
-</div>
+</aside>
 
 @section Scripts {
 <script type="text/javascript">
