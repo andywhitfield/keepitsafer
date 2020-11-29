@@ -9,6 +9,7 @@ using KeepItSafer.Crypto;
 using KeepItSafer.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace KeepItSafer.Web.Data
 {
@@ -16,11 +17,13 @@ namespace KeepItSafer.Web.Data
     {
         private readonly SqliteDataContext context;
         private readonly ILogger<UserAccountRepository> logger;
+        private readonly IOptions<DropboxConfig> dropboxConfig;
 
-        public UserAccountRepository(SqliteDataContext context, ILogger<UserAccountRepository> logger)
+        public UserAccountRepository(SqliteDataContext context, ILogger<UserAccountRepository> logger, IOptions<DropboxConfig> dropboxConfig)
         {
             this.context = context;
             this.logger = logger;
+            this.dropboxConfig = dropboxConfig;
         }
 
         public async Task<bool> HasMasterPasswordAsync(ClaimsPrincipal user)
@@ -36,7 +39,8 @@ namespace KeepItSafer.Web.Data
 
             using (var secure = new Secure())
             {
-                newAccount.SetPasswordDb(new PasswordDb {
+                newAccount.SetPasswordDb(new PasswordDb
+                {
                     MasterPassword = secure.HashValue(masterPassword)
                 });
             }
@@ -68,12 +72,23 @@ namespace KeepItSafer.Web.Data
         {
             context.UserAccounts.Update(userAccount);
             await context.SaveChangesAsync();
+            logger.LogInformation("User account saved.");
 
-            if (string.IsNullOrEmpty(userAccount.DropboxToken))
+            if (string.IsNullOrEmpty(userAccount.DropboxAccessToken) || string.IsNullOrEmpty(userAccount.DropboxRefreshToken))
+            {
+                logger.LogDebug("User account has no Dropbox token");
                 return;
+            }
 
             using var contentStream = new MemoryStream(Encoding.ASCII.GetBytes(userAccount.PasswordDatabase));
-            using var dropboxClient = new DropboxClient(userAccount.DropboxToken);
+            using var dropboxClient = new DropboxClient(userAccount.DropboxAccessToken, userAccount.DropboxRefreshToken,
+                dropboxConfig.Value.KeepItSaferAppKey, dropboxConfig.Value.KeepItSaferAppSecret, new DropboxClientConfig());
+            if (!await dropboxClient.RefreshAccessToken(new[] { "files.content.write" }))
+            {
+                logger.LogWarning($"Could not refresh Dropbox access token");
+                return;
+            }
+
             var file = await dropboxClient.Files.UploadAsync(
                 "/keepitsafer.db.json",
                 WriteMode.Overwrite.Instance,

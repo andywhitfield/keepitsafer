@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace KeepItSafer.Web.Controllers
 {
@@ -23,12 +24,12 @@ namespace KeepItSafer.Web.Controllers
 
         public AuthenticationController(IUserAccountRepository userAccountRepository,
             ILogger<AuthenticationController> logger,
-            IConfiguration configuration)
+            IOptions<DropboxConfig> dropboxConfig)
         {
             this.userAccountRepository = userAccountRepository;
             this.logger = logger;
-            this.dropboxAppKey = configuration["Dropbox:KeepItSaferAppKey"];
-            this.dropboxAppSecret = configuration["Dropbox:KeepItSaferAppSecret"];
+            this.dropboxAppKey = dropboxConfig.Value.KeepItSaferAppKey;
+            this.dropboxAppSecret = dropboxConfig.Value.KeepItSaferAppSecret;
         }
 
 
@@ -92,7 +93,7 @@ namespace KeepItSafer.Web.Controllers
         [Authorize]
         public IActionResult ConnectToDropbox()
         {
-            var dropboxRedirect = DropboxOAuth2Helper.GetAuthorizeUri(OAuthResponseType.Code, dropboxAppKey, RedirectUri);
+            var dropboxRedirect = DropboxOAuth2Helper.GetAuthorizeUri(OAuthResponseType.Code, dropboxAppKey, RedirectUri, tokenAccessType: TokenAccessType.Offline, scopeList: new[] {"files.content.write"});
             logger.LogInformation($"Getting user token from Dropbox: {dropboxRedirect} (redirect={RedirectUri})");
             return Redirect(dropboxRedirect.ToString());
         }
@@ -102,10 +103,11 @@ namespace KeepItSafer.Web.Controllers
         public async Task<ActionResult> DropboxAuthentication(string code, string state)
         {
             var response = await DropboxOAuth2Helper.ProcessCodeFlowAsync(code, dropboxAppKey, dropboxAppSecret, RedirectUri.ToString());
-            logger.LogInformation($"Got user token from Dropbox: {response.AccessToken}");
+            logger.LogInformation($"Got user tokens from Dropbox: {response.AccessToken} / {response.RefreshToken}");
 
             var userAccount = await userAccountRepository.GetUserAccountAsync(User);
-            userAccount.DropboxToken = response.AccessToken;
+            userAccount.DropboxAccessToken = response.AccessToken;
+            userAccount.DropboxRefreshToken = response.RefreshToken;
             await userAccountRepository.SaveUserAccountAsync(userAccount);
 
             return Redirect("~/");
@@ -116,7 +118,8 @@ namespace KeepItSafer.Web.Controllers
         public async Task<ActionResult> DisconnectFromDropbox()
         {
             var userAccount = await userAccountRepository.GetUserAccountAsync(User);
-            userAccount.DropboxToken = null;
+            userAccount.DropboxAccessToken = null;
+            userAccount.DropboxRefreshToken = null;
             await userAccountRepository.SaveUserAccountAsync(userAccount);
             return Redirect("~/");
         }

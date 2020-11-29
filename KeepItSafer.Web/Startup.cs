@@ -98,6 +98,8 @@ namespace KeepItSafer.Web
                 o.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<DropboxConfig>(Configuration.GetSection("Dropbox"));
+
             services.AddDbContext<SqliteDataContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();

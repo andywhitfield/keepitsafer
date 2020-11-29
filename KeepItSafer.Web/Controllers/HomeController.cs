@@ -25,7 +25,7 @@ namespace KeepItSafer.Web.Controllers
             }
 
             var userAccount = await userAccountRepository.GetUserAccountAsync(User);
-            return base.View(new PasswordDbViewModel(userAccount.GetPasswordDb(), userAccount.DropboxToken));
+            return base.View(new PasswordDbViewModel(userAccount.GetPasswordDb(), userAccount.DropboxAccessToken));
         }
 
         public IActionResult Error() => View();
