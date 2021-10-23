@@ -57,11 +57,11 @@ nav {
 .groups>div {
     background-color: #408732;
     color: white;
-    width: 170px;
+    width: 164px;
     margin: 3px;
     text-align: center;
     font-size: 14pt;
-    padding: 10px;
+    padding: 3px;
     cursor: default;
     word-wrap: break-word;
 }
