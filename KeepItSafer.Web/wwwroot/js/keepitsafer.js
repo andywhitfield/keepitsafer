@@ -11,7 +11,7 @@ function initialise() {
     $('input[data-copy]').click(function() { copyPasswordToClipboard($(this)) })
     $("#masterpasswordentryform input[value='Cancel']").click(function() { closeMasterPasswordEntry() })
     $('#masterpasswordentryform').submit(handleMasterPasswordEntered)
-    $('input[name="groupsfilter"]').hide().on('input', handleGroupFilter);
+    $('input[name="groupsfilter"]').show().on('input', handleGroupFilter)
     $(document).keydown(handleDocumentKeyDown)
 
     $('#addnewentryvalueencrypted').change(function() {
@@ -29,8 +29,6 @@ function handleDocumentKeyDown(e) {
     switch (e.keyCode) {
         case 27: // escape
             closeMasterPasswordEntry()
-            if ($('input[name="groupsfilter"]').is(':focus'))
-                closeGroupFilter()
             break;
         case 81:
         case 113:
@@ -39,7 +37,7 @@ function handleDocumentKeyDown(e) {
         case 83:
         case 115:
             // show quick find on 'q', 's', or 'f' (upper & lower case)
-            if (document.activeElement != null && document.activeElement.tagName.toLowerCase() !== 'input' && $('section.groups').is(':visible') && !$('input[name="groupsfilter"]').is(':visible')) {
+            if (document.activeElement != null && document.activeElement.tagName.toLowerCase() !== 'input' && $('section.groups').is(':visible') && $('input[name="groupsfilter"]').is(':visible')) {
                 closeGroupFilter()
                 $('input[name="groupsfilter"]').show().focus().select()
                 e.preventDefault()
@@ -60,6 +58,7 @@ function showAllGroups() {
     hideDecryptedPasswords()
     $('section.group-entries').hide()
     $('section.groups').show()
+    $('input[name="groupsfilter"]').show()
 }
 
 function showGroup(group) {

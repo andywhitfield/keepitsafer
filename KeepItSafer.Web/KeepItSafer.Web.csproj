@@ -4,9 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BuildBundlerMinifier" Version="*"/>
-    <PackageReference Include="BCrypt.Net-Next" Version="*"/>
-    <PackageReference Include="Dropbox.Api" Version="6.19.*" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.*"/>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.*"/>
+    <PackageReference Include="Dropbox.Api" Version="6.31.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="6.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.*"/>
