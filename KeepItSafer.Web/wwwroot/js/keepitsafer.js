@@ -4,7 +4,7 @@ function initialise() {
     notifyWindow = new Notify()
 
     $('.groups div').click(function() { showGroup($(this).attr('data-group')) })
-    $('.group-entries div:first-child a').click(function() { showAllGroups() })
+    $('.group-entries div:first-child a.back-all-groups').click(function() { showAllGroups() })
     $('.group-entry-password input[data-type="encrypted"]').click(function() { decryptPassword($(this)) })
     $('.group-entry-delete input').click(function() { deleteEntry($(this)) })
     $('.group-entries div:first-child').click(function() { hideDecryptedPasswords() })
@@ -98,7 +98,9 @@ function decryptPassword(entry) {
 function copyPasswordToClipboard(entry) {
     let dataCopyType = entry.attr('data-copy')
     let dataCopyName = entry.parents('div[data-name]').attr('data-name')
-    if (dataCopyType === 'name') {
+    if (dataCopyType === 'group-name') {
+        copyToClipboard(entry.parents('section').attr('data-group'))
+    } else if (dataCopyType === 'name') {
         copyToClipboard(dataCopyName)
     } else if (dataCopyType === 'value') {
         copyToClipboard(entry.parents('.group-entry-actions').find('.group-entry-password input').val())

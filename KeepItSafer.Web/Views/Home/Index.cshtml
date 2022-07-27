@@ -20,8 +20,8 @@
 {
 <section class="group-entries" data-group="@group.Name">
     <div>
-        <span>@group.Name</span>
-        <span class="group-entry-actions"><a>back</a></span>
+        <span><input type="button" value="Copy" data-copy="group-name" /> @group.Name</span>
+        <span class="group-entry-actions"><a class="back-all-groups">back</a></span>
     </div>
     @foreach (var entry in group.Entries)
     {
