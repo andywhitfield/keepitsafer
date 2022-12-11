@@ -28,7 +28,7 @@ namespace KeepItSafer.Crypto
                 algorithm.IV = iv;
             }
 
-            using (var passwordToBytes = new Rfc2898DeriveBytes(password, algorithm.KeySize))
+            using (var passwordToBytes = new Rfc2898DeriveBytes(password, algorithm.KeySize, 1000, HashAlgorithmName.SHA1))
             {
                 var salt = GenerateRandomSalt();
                 passwordToBytes.Salt = salt;
@@ -49,7 +49,7 @@ namespace KeepItSafer.Crypto
         public string Decrypt(string password, byte[] iv, byte[] salt, string encryptedValueBase64Encoded)
         {
             algorithm.IV = iv;
-            using (var passwordToBytes = new Rfc2898DeriveBytes(password, algorithm.KeySize))
+            using (var passwordToBytes = new Rfc2898DeriveBytes(password, algorithm.KeySize, 1000, HashAlgorithmName.SHA1))
             {
                 passwordToBytes.Salt = salt;
                 algorithm.Key = passwordToBytes.GetBytes(algorithm.KeySize / 8);
